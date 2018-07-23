@@ -1,11 +1,18 @@
 package skku.alticastvux.voiceable;
 
+import android.util.Patterns;
+
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import skku.alticastvux.activity.MainActivity;
+import skku.alticastvux.voiceable.pattern.FindSongArtistPattern;
+import skku.alticastvux.voiceable.pattern.FindSongPattern;
+import skku.alticastvux.voiceable.pattern.MoveForwardPattern;
+import skku.alticastvux.voiceable.pattern.NumberTestPattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 
@@ -19,13 +26,24 @@ public class MainGrammar {
     private MultiValuedMap<String, String> patternsMap = new ArrayListValuedHashMap<String, String>();
     private MultiValuedMap<String, String> exampleTextMap = new ArrayListValuedHashMap<String, String>();
 
+    public static final Class Patterns[] = {FindSongPattern.class, FindSongArtistPattern.class, MoveForwardPattern.class, NumberTestPattern.class};
+
     public MainGrammar() {
-        //registerPattern(PATTERN_TV_ON, new String[]{MainActivity.class.getSimpleName()});
+        for (int i = 0; i < Patterns.length; i++) {
+            Class c = Patterns[i];
+            try {
+                VoiceablePattern pattern = (VoiceablePattern) c.getConstructor().newInstance(new Object[]{});
+                registerPattern(pattern.getPattern(), new String[]{MainActivity.class.getSimpleName()});
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     private void registerPattern(VoiceablePattern pattern) {
         registerPattern(pattern.getPattern(), pattern.getScenes());
     }
+
     private void registerPattern(String pattern, String[] screenNames) {
         for (String screenName : screenNames) {
             patternsMap.put(screenName, pattern);
