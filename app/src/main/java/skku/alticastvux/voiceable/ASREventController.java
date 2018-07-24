@@ -34,8 +34,9 @@ public class ASREventController implements  ClientAPI.Callback<ClientAPI.ASRResu
         String pattern = asrResult.getMatchedPattern();
         ArrayList<ClientAPI.Entity> entities = asrResult.getMatchedEntities();
 
-        if (listener != null)
+        if (listener != null) {
             listener.receiveCommand(pattern, response, entities);
+        }
     }
 
     public void setCommandListener(CommandListener listener, String sceneName) {

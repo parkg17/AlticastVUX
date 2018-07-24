@@ -22,8 +22,9 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import skku.alticastvux.model.Movie;
 import skku.alticastvux.R;
+import skku.alticastvux.model.VideoInfo;
+import skku.alticastvux.util.Util;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.
@@ -57,6 +58,8 @@ public class CardPresenter extends Presenter {
          * will require your resources in xhdpi. For more information, see
          * https://developer.android.com/training/tv/start/layouts.html#density-resources
          */
+
+
         mDefaultCardImage = parent.getResources().getDrawable(R.drawable.movie);
 
         ImageCardView cardView = new ImageCardView(parent.getContext()) {
@@ -75,18 +78,19 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
+        VideoInfo videoInfo = (VideoInfo) item;
         ImageCardView cardView = (ImageCardView) viewHolder.view;
 
         Log.d(TAG, "onBindViewHolder");
-        if (movie.getCardImageUrl() != null) {
-            cardView.setTitleText(movie.getTitle());
-            cardView.setContentText(movie.getStudio());
+        if (videoInfo.getName() != null) {
+            cardView.setTitleText(videoInfo.getTitle());
+            cardView.setContentText(videoInfo.getPath());
             cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
+
             Glide.with(viewHolder.view.getContext())
-                    .load(movie.getCardImageUrl())
+                    .load(Util.getThumbnailByteArray(videoInfo.getPath()))
+                    .asBitmap()
                     .centerCrop()
-                    .error(mDefaultCardImage)
                     .into(cardView.getMainImageView());
         }
     }

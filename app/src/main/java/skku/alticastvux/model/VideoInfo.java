@@ -1,10 +1,14 @@
 package skku.alticastvux.model;
 
+import java.io.Serializable;
+
 /**
  * Created by woorim on 2018. 7. 20..
  */
 
-public class VideoInfo {
+public class VideoInfo implements Serializable {
+    static final long serialVersionUID = 727566175075960623L;
+
     private long id;
     private String path; // => URL OR File path
     private String title;

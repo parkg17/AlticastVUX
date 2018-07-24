@@ -26,6 +26,7 @@ import skku.alticastvux.activity.base.BaseActivity;
 public class DetailsActivity extends BaseActivity {
     public static final String SHARED_ELEMENT_NAME = "hero";
     public static final String MOVIE = "Movie";
+    public static final String VIDEO_INFO = "VIDEO_INFO";
 
     /**
      * Called when the activity is first created.

@@ -20,8 +20,8 @@ import android.support.v17.leanback.app.VideoSupportFragmentGlueHost;
 import android.support.v17.leanback.media.MediaPlayerGlue;
 import android.support.v17.leanback.media.PlaybackGlue;
 
-import skku.alticastvux.model.Movie;
 import skku.alticastvux.activity.DetailsActivity;
+import skku.alticastvux.model.VideoInfo;
 
 /**
  * Handles video playback with media controls.
@@ -35,8 +35,8 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Movie movie = (Movie) getActivity()
-                .getIntent().getSerializableExtra(DetailsActivity.MOVIE);
+        final VideoInfo videoInfo = (VideoInfo) getActivity()
+                .getIntent().getSerializableExtra(DetailsActivity.VIDEO_INFO);
 
         VideoSupportFragmentGlueHost glueHost =
                 new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
@@ -51,9 +51,9 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
 
             }
         });
-        mMediaPlayerGlue.setTitle(movie.getTitle());
-        mMediaPlayerGlue.setArtist(movie.getDescription());
-        mMediaPlayerGlue.setVideoUrl(movie.getVideoUrl());
+        mMediaPlayerGlue.setTitle(videoInfo.getTitle());
+        mMediaPlayerGlue.setArtist(videoInfo.getPath());
+        mMediaPlayerGlue.setVideoUrl(videoInfo.getPath());
     }
 
     @Override

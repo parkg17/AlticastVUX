@@ -16,18 +16,18 @@ package skku.alticastvux.presenter;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
 
-import skku.alticastvux.model.Movie;
+import skku.alticastvux.model.VideoInfo;
 
 public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPresenter {
 
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
+        VideoInfo videoInfo = (VideoInfo) item;
 
-        if (movie != null) {
-            viewHolder.getTitle().setText(movie.getTitle());
-            viewHolder.getSubtitle().setText(movie.getStudio());
-            viewHolder.getBody().setText(movie.getDescription());
+        if (videoInfo != null) {
+            viewHolder.getTitle().setText(videoInfo.getName());
+            viewHolder.getSubtitle().setText(videoInfo.getTitle());
+            viewHolder.getBody().setText(videoInfo.getPath());
         }
     }
 }

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="@style/Theme.Leanback"></style>
+    <style name="AppTheme" parent="@style/Theme.Leanback">
+        <item name="rowHeaderStyle">@style/AppTheme.RowHeader</item>
+    </style>
+
+    <style name="AppTheme.RowHeader" parent="Widget.Leanback.Row.Header">
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

@@ -7,11 +7,16 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.TypedValue;
 
+import org.apache.commons.collections4.map.HashedMap;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import skku.alticastvux.app.SKKUVuxApp;
 import skku.alticastvux.model.VideoInfo;
@@ -36,12 +41,14 @@ public class Util {
         while (cur.moveToNext()) {
             VideoInfo videoInfo = new VideoInfo();
             videoInfo.setId(cur.getLong(col[0]));
+            videoInfo.setPath(cur.getString(col[1]));
             videoInfo.setName(cur.getString(col[2]));
             videoInfo.setDuration(cur.getLong(col[3]));
             videoInfo.setSize(cur.getLong(col[4]));
             videoInfo.setTitle(cur.getString(col[5]));
-            String res = cur.getString(col[6]);
-            //resolution
+            String res[] = cur.getString(col[6]).split("x");
+            videoInfo.setWidth(Integer.parseInt(res[0]));
+            videoInfo.setHeight(Integer.parseInt(res[1]));
             videoInfo.setAddedDate(cur.getString(col[7]));
             videoInfoArrayList.add(videoInfo);
         }
@@ -52,6 +59,20 @@ public class Util {
         Resources r = context.getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
         return px;
+    }
+
+    static HashMap<String, byte[]> map;
+
+    public static byte[] getThumbnailByteArray(String filePath) {
+        if(map == null) {
+            map = new HashMap<>();
+        }
+        if(map.get(filePath) == null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            Util.getThumbnail(filePath).compress(Bitmap.CompressFormat.PNG, 80, stream);
+            map.put(filePath,stream.toByteArray());
+        }
+        return map.get(filePath);
     }
 
     public static Bitmap getThumbnail(String filePath) {

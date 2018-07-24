@@ -48,14 +48,14 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import java.util.Collections;
 import java.util.List;
 
-import skku.alticastvux.model.Movie;
-import skku.alticastvux.model.MovieList;
 import skku.alticastvux.R;
 import skku.alticastvux.activity.DetailsActivity;
 import skku.alticastvux.activity.MainActivity;
 import skku.alticastvux.activity.PlaybackActivity;
+import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.presenter.CardPresenter;
 import skku.alticastvux.presenter.DetailsDescriptionPresenter;
+import skku.alticastvux.util.Util;
 
 /*
  * LeanbackDetailsFragment extends DetailsFragment, a Wrapper fragment for leanback details screens.
@@ -73,7 +73,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private static final int NUM_COLS = 10;
 
-    private Movie mSelectedMovie;
+    private VideoInfo mSelectedVideo;
 
     private ArrayObjectAdapter mAdapter;
     private ClassPresenterSelector mPresenterSelector;
@@ -87,16 +87,16 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
 
-        mSelectedMovie =
-                (Movie) getActivity().getIntent().getSerializableExtra(DetailsActivity.MOVIE);
-        if (mSelectedMovie != null) {
+        mSelectedVideo =
+                (VideoInfo) getActivity().getIntent().getSerializableExtra(DetailsActivity.VIDEO_INFO);
+        if (mSelectedVideo != null) {
             mPresenterSelector = new ClassPresenterSelector();
             mAdapter = new ArrayObjectAdapter(mPresenterSelector);
             setupDetailsOverviewRow();
             setupDetailsOverviewRowPresenter();
-            setupRelatedMovieListRow();
+            //setupRelatedMovieListRow();
             setAdapter(mAdapter);
-            initializeBackground(mSelectedMovie);
+            initializeBackground(mSelectedVideo);
             setOnItemViewClickedListener(new ItemViewClickedListener());
         } else {
             Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -104,10 +104,10 @@ public class VideoDetailsFragment extends DetailsFragment {
         }
     }
 
-    private void initializeBackground(Movie data) {
+    private void initializeBackground(VideoInfo data) {
         mDetailsBackground.enableParallax();
         Glide.with(getActivity())
-                .load(data.getBackgroundImageUrl())
+                .load(Util.getThumbnailByteArray(data.getPath()))
                 .asBitmap()
                 .centerCrop()
                 .error(R.drawable.default_background)
@@ -122,14 +122,14 @@ public class VideoDetailsFragment extends DetailsFragment {
     }
 
     private void setupDetailsOverviewRow() {
-        Log.d(TAG, "doInBackground: " + mSelectedMovie.toString());
-        final DetailsOverviewRow row = new DetailsOverviewRow(mSelectedMovie);
+        //Log.d(TAG, "doInBackground: " + mSelectedMovie.toString());
+        final DetailsOverviewRow row = new DetailsOverviewRow(mSelectedVideo);
         row.setImageDrawable(
                 ContextCompat.getDrawable(getContext(), R.drawable.default_background));
         int width = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_WIDTH);
         int height = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_HEIGHT);
         Glide.with(getActivity())
-                .load(mSelectedMovie.getCardImageUrl())
+                .load(Util.getThumbnailByteArray(mSelectedVideo.getPath()))
                 .centerCrop()
                 .error(R.drawable.default_background)
                 .into(new SimpleTarget<GlideDrawable>(width, height) {
@@ -185,7 +185,7 @@ public class VideoDetailsFragment extends DetailsFragment {
             public void onActionClicked(Action action) {
                 if (action.getId() == ACTION_WATCH_TRAILER) {
                     Intent intent = new Intent(getActivity(), PlaybackActivity.class);
-                    intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
+                    intent.putExtra(DetailsActivity.VIDEO_INFO, mSelectedVideo);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
@@ -195,6 +195,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         mPresenterSelector.addClassPresenter(DetailsOverviewRow.class, detailsPresenter);
     }
 
+    /*
     private void setupRelatedMovieListRow() {
         String subcategories[] = {getString(R.string.related_movies)};
         List<Movie> list = MovieList.getList();
@@ -208,7 +209,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         HeaderItem header = new HeaderItem(0, subcategories[0]);
         mAdapter.add(new ListRow(header, listRowAdapter));
         mPresenterSelector.addClassPresenter(ListRow.class, new ListRowPresenter());
-    }
+    } */
 
     public int convertDpToPixel(Context context, int dp) {
         float density = context.getResources().getDisplayMetrics().density;
@@ -220,10 +221,10 @@ public class VideoDetailsFragment extends DetailsFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof Movie) {
+            if (item instanceof VideoInfo) {
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(getResources().getString(R.string.movie), mSelectedMovie);
+                intent.putExtra(DetailsActivity.VIDEO_INFO, mSelectedVideo);
 
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),

@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alticast.mmuxclient.ClientAPI;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 
 import skku.alticastvux.R;
 import skku.alticastvux.activity.base.BaseActivity;
+import skku.alticastvux.model.VideoInfo;
+import skku.alticastvux.util.Util;
 import skku.alticastvux.voiceable.ASREventController;
 
 /*
@@ -40,6 +43,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ArrayList<VideoInfo> videos = Util.getAllVideos();
+        for(VideoInfo info: videos) {
+            Log.e("AlticastVUX", info.getName());
+        }
         ASREventController.getInstance().createASRContext(getApplicationContext());
         checkPermissions();
     }
@@ -93,5 +100,15 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
+        Toast.makeText(this, response, 0).show();
+        Log.e("AlticastVUX", "entites size : "+entities.size());
+        for(int i = 0; i < entities.size(); i++) {
+            Log.e("AlticastVUX", "entity : "+entities.get(i).getType()+" : "+entities.get(i).getValue().toString());
+        }
+        return false;
     }
 }
