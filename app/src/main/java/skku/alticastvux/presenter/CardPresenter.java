@@ -18,9 +18,11 @@ import android.graphics.drawable.Drawable;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.hitherejoe.leanbackcards.LiveCardView;
 
 import skku.alticastvux.R;
 import skku.alticastvux.model.VideoInfo;
@@ -39,7 +41,7 @@ public class CardPresenter extends Presenter {
     private static int sDefaultBackgroundColor;
     private Drawable mDefaultCardImage;
 
-    private static void updateCardBackgroundColor(ImageCardView view, boolean selected) {
+    private static void updateCardBackgroundColor(View view, boolean selected) {
         int color = selected ? sSelectedBackgroundColor : sDefaultBackgroundColor;
         // Both background colors should be set because the view's background is temporarily visible
         // during animations.
@@ -62,30 +64,37 @@ public class CardPresenter extends Presenter {
 
         mDefaultCardImage = parent.getResources().getDrawable(R.drawable.movie);
 
-        ImageCardView cardView = new ImageCardView(parent.getContext()) {
+        LiveCardView liveCardView = new LiveCardView(parent.getContext()) {
             @Override
             public void setSelected(boolean selected) {
+                if(selected) {
+                    startVideo();
+                } else {
+                    stopVideo();
+                }
                 updateCardBackgroundColor(this, selected);
-                super.setSelected(selected);
+                super.setSelected(true);
             }
         };
 
-        cardView.setFocusable(true);
-        cardView.setFocusableInTouchMode(true);
-        updateCardBackgroundColor(cardView, false);
-        return new ViewHolder(cardView);
+
+        liveCardView.setFocusable(true);
+        liveCardView.setFocusableInTouchMode(true);
+        updateCardBackgroundColor(liveCardView, false);
+        return new ViewHolder(liveCardView);
     }
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         VideoInfo videoInfo = (VideoInfo) item;
-        ImageCardView cardView = (ImageCardView) viewHolder.view;
+        LiveCardView cardView = (LiveCardView) viewHolder.view;
 
         Log.d(TAG, "onBindViewHolder");
         if (videoInfo.getName() != null) {
             cardView.setTitleText(videoInfo.getTitle());
             cardView.setContentText(videoInfo.getPath());
-            cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
+            cardView.setVideoViewSize(CARD_WIDTH, CARD_HEIGHT);
+            cardView.setVideoUrl(videoInfo.getPath());
 
             Glide.with(viewHolder.view.getContext())
                     .load(Util.getThumbnailByteArray(videoInfo.getPath()))
@@ -98,9 +107,9 @@ public class CardPresenter extends Presenter {
     @Override
     public void onUnbindViewHolder(Presenter.ViewHolder viewHolder) {
         Log.d(TAG, "onUnbindViewHolder");
-        ImageCardView cardView = (ImageCardView) viewHolder.view;
+        LiveCardView cardView = (LiveCardView) viewHolder.view;
         // Remove references to images so that the garbage collector can free up memory
-        cardView.setBadgeImage(null);
-        cardView.setMainImage(null);
+        //cardView.setBadgeImage(null);
+        //cardView.setMainImage(null);
     }
 }

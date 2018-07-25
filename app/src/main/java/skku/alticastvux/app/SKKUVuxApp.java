@@ -1,7 +1,9 @@
 package skku.alticastvux.app;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
+import skku.alticastvux.util.SharedPreferencesUtil;
 import skku.alticastvux.voiceable.ASREventController;
 
 /**
@@ -16,6 +18,8 @@ public class SKKUVuxApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+
+        SharedPreferencesUtil.init(this);
     }
 
     public static SKKUVuxApp getInstance() {

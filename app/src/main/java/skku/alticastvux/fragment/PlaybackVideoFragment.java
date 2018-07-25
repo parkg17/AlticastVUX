@@ -14,14 +14,26 @@
 
 package skku.alticastvux.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v17.leanback.app.VideoSupportFragment;
 import android.support.v17.leanback.app.VideoSupportFragmentGlueHost;
+import android.support.v17.leanback.media.MediaPlayerAdapter;
 import android.support.v17.leanback.media.MediaPlayerGlue;
 import android.support.v17.leanback.media.PlaybackGlue;
+import android.util.Log;
+
+import com.alticast.mmuxclient.ClientAPI;
+
+import java.util.ArrayList;
 
 import skku.alticastvux.activity.DetailsActivity;
+import skku.alticastvux.activity.base.BaseFragmentActivity;
+import skku.alticastvux.media.PlaybackSeekDiskDataProvider;
+import skku.alticastvux.media.VideoMediaPlayerGlue;
 import skku.alticastvux.model.VideoInfo;
+import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.MovePattern;
 
 /**
  * Handles video playback with media controls.
@@ -29,7 +41,7 @@ import skku.alticastvux.model.VideoInfo;
 public class PlaybackVideoFragment extends VideoSupportFragment {
     private static final String TAG = "PlaybackVideoFragment";
 
-    private MediaPlayerGlue mMediaPlayerGlue;
+    private VideoMediaPlayerGlue<MediaPlayerAdapter> mMediaPlayerGlue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +53,7 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
         VideoSupportFragmentGlueHost glueHost =
                 new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
 
-        mMediaPlayerGlue = new MediaPlayerGlue(getActivity());
+        mMediaPlayerGlue = new VideoMediaPlayerGlue(getActivity(), new MediaPlayerAdapter(getActivity()));
         mMediaPlayerGlue.setHost(glueHost);
         mMediaPlayerGlue.setMode(MediaPlayerGlue.NO_REPEAT);
         mMediaPlayerGlue.setPlayerCallback(new PlaybackGlue.PlayerCallback() {
@@ -52,8 +64,22 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
             }
         });
         mMediaPlayerGlue.setTitle(videoInfo.getTitle());
-        mMediaPlayerGlue.setArtist(videoInfo.getPath());
-        mMediaPlayerGlue.setVideoUrl(videoInfo.getPath());
+        mMediaPlayerGlue.setSubtitle(videoInfo.getPath());
+        mMediaPlayerGlue.getPlayerAdapter().setDataSource(Uri.parse(videoInfo.getPath()));
+        PlaybackSeekDiskDataProvider.setDemoSeekProvider(mMediaPlayerGlue);
+
+        ((BaseFragmentActivity)getActivity()).setCommandListener(new CommandListener() {
+            @Override
+            public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
+                Log.e("TEST", response);
+                MovePattern movePattern = new MovePattern(response.replace(" ",""));
+                if(movePattern.getSeconds() != 0) {
+                    mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition()+movePattern.getSeconds()*1000);
+                    Log.e("TEST", movePattern.getSeconds()+"");
+                }
+                return true;
+            }
+        });
     }
 
     @Override

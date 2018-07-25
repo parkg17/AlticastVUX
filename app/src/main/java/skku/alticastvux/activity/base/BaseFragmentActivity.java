@@ -26,8 +26,15 @@ public class BaseFragmentActivity extends FragmentActivity implements CommandLis
         ASREventController.getInstance().removeCommandListener(this);
     }
 
+    CommandListener listener;
+
+    public void setCommandListener(CommandListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
-        return false;
+        if (listener != null) return listener.receiveCommand(pattern, response, entities);
+        else return false;
     }
 }

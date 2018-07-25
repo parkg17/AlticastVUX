@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class VideoInfo implements Serializable {
-    static final long serialVersionUID = 727566175075960623L;
+    static final long serialVersionUID = 1234123412341234L;
 
     private long id;
     private String path; // => URL OR File path

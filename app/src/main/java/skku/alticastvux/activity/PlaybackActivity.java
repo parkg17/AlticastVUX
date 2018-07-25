@@ -17,12 +17,13 @@ package skku.alticastvux.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import skku.alticastvux.activity.base.BaseFragmentActivity;
 import skku.alticastvux.fragment.PlaybackVideoFragment;
 
 /**
  * Loads {@link PlaybackVideoFragment}.
  */
-public class PlaybackActivity extends FragmentActivity {
+public class PlaybackActivity extends BaseFragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

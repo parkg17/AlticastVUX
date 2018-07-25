@@ -25,4 +25,8 @@ dependencies {
     implementation 'voiceable:client-library:0.1.2-alpha@aar'
     implementation 'org.apache.commons:commons-collections4:4.1'
     implementation "com.google.protobuf:protobuf-java:3.5.1"
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    //test
+    implementation 'com.hitherejoe.leanback:leanbackcards:0.1.0'
 }

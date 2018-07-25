@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import skku.alticastvux.activity.MainActivity;
+import skku.alticastvux.activity.PlaybackActivity;
 import skku.alticastvux.voiceable.pattern.FindSongArtistPattern;
 import skku.alticastvux.voiceable.pattern.FindSongPattern;
 import skku.alticastvux.voiceable.pattern.MoveForwardPattern;
@@ -29,6 +30,8 @@ public class MainGrammar {
     public static final Class Patterns[] = {FindSongPattern.class, FindSongArtistPattern.class, MoveForwardPattern.class, NumberTestPattern.class};
 
     public MainGrammar() {
+        registerPattern("${time}(앞으로|뒤로)", new String[]{MainActivity.class.getSimpleName(), PlaybackActivity.class.getSimpleName()});
+        /*
         for (int i = 0; i < Patterns.length; i++) {
             Class c = Patterns[i];
             try {
@@ -37,7 +40,7 @@ public class MainGrammar {
             } catch (Exception e) {
 
             }
-        }
+        }*/
     }
 
     private void registerPattern(VoiceablePattern pattern) {
