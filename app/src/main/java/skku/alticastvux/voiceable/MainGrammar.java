@@ -30,7 +30,11 @@ public class MainGrammar {
     public static final Class Patterns[] = {FindSongPattern.class, FindSongArtistPattern.class, MoveForwardPattern.class, NumberTestPattern.class};
 
     public MainGrammar() {
-        registerPattern("${time}(앞으로|뒤로)", new String[]{MainActivity.class.getSimpleName(), PlaybackActivity.class.getSimpleName()});
+        registerPattern("[방금|지금] [나온|나오는|들리는|이] (노래|[배경]음악|BGM|브금) (검색[해줘]|찾아[줘]|알려줘|뭐냐|뭐야|뭐여)", new String[]{MainActivity.class.getSimpleName(), PlaybackActivity.class.getSimpleName()});
+        registerPattern("${time}뒤로", new String[]{MainActivity.class.getSimpleName(), PlaybackActivity.class.getSimpleName()});
+        registerPattern("${time}앞으로", new String[]{MainActivity.class.getSimpleName(), PlaybackActivity.class.getSimpleName()});
+        // ${time} 동작안함
+
         /*
         for (int i = 0; i < Patterns.length; i++) {
             Class c = Patterns[i];

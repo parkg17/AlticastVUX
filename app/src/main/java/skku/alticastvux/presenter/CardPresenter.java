@@ -14,7 +14,9 @@
 
 package skku.alticastvux.presenter;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.util.Log;
@@ -22,11 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.hitherejoe.leanbackcards.LiveCardView;
 
 import skku.alticastvux.R;
 import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.util.Util;
+import skku.alticastvux.widget.LiveCardView;
 
 /*
  * A CardPresenter is used to generate Views and bind Objects to them on demand.
@@ -64,10 +66,15 @@ public class CardPresenter extends Presenter {
 
         mDefaultCardImage = parent.getResources().getDrawable(R.drawable.movie);
 
-        LiveCardView liveCardView = new LiveCardView(parent.getContext()) {
+        final LiveCardView liveCardView = new LiveCardView(parent.getContext()) {
             @Override
             public void setSelected(boolean selected) {
-                if(selected) {
+                if (selected) {
+                    startVideo();
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(videoInfo.getPath());
+                    long duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                    setPosition((int)duration/2);
                     startVideo();
                 } else {
                     stopVideo();
@@ -84,9 +91,11 @@ public class CardPresenter extends Presenter {
         return new ViewHolder(liveCardView);
     }
 
+    VideoInfo videoInfo;
+
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        VideoInfo videoInfo = (VideoInfo) item;
+        videoInfo = (VideoInfo) ((CardInfo)item).getObject("videoInfo");
         LiveCardView cardView = (LiveCardView) viewHolder.view;
 
         Log.d(TAG, "onBindViewHolder");

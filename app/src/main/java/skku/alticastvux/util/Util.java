@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -76,11 +77,20 @@ public class Util {
     }
 
     public static Bitmap getThumbnail(String filePath) {
-        return ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(filePath);
+        long duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+        Bitmap thumb = retriever.getFrameAtTime(duration / 2 * 1000,
+                MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        return thumb;
     }
 
-    public static String makeFFmpegCommand(String input, String output, int start, int duration) {
+    public static String makeFFmpegExtractMusicCommand(String input, String output, int start, int duration) {
         return String.format("-ss %d -t %d -i %s -acodec pcm_s16le -y %s", start, duration, input, output);
+    }
+
+    public static String makeFFmpegExtractThumbnailCommand(String input, String output, int time) {
+        return String.format("-ss %d -i %s -vf thumbnail -q:v 10 -vframes 1 -y %s", time, input, output);
     }
 
     public static String getAssetAsString(Context context, String assetName) {

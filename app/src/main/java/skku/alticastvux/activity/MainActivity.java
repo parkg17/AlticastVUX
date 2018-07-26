@@ -25,11 +25,15 @@ import android.widget.Toast;
 
 import com.alticast.mmuxclient.ClientAPI;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.io.File;
 
 import skku.alticastvux.R;
 import skku.alticastvux.activity.base.BaseActivity;
 import skku.alticastvux.model.VideoInfo;
+import skku.alticastvux.util.AudioFromVideo;
+import skku.alticastvux.util.AudioUtil;
 import skku.alticastvux.util.Util;
 import skku.alticastvux.voiceable.ASREventController;
 
@@ -44,9 +48,6 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ArrayList<VideoInfo> videos = Util.getAllVideos();
-        for(VideoInfo info: videos) {
-            Log.e("AlticastVUX", info.getName());
-        }
         ASREventController.getInstance().createASRContext(getApplicationContext());
         checkPermissions();
     }

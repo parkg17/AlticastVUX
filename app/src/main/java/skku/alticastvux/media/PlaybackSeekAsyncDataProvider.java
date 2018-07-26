@@ -82,7 +82,7 @@ public abstract class PlaybackSeekAsyncDataProvider extends PlaybackSeekDataProv
     }
 
     public PlaybackSeekAsyncDataProvider() {
-        this(16, 24);
+        this(100, 100);
     }
 
     public PlaybackSeekAsyncDataProvider(int cacheSize, int prefetchCacheSize) {
@@ -137,7 +137,7 @@ public abstract class PlaybackSeekAsyncDataProvider extends PlaybackSeekDataProv
                 mPrefetchCache.snapshot().entrySet().iterator(); it.hasNext(); ) {
             Map.Entry<Integer, Bitmap> entry = it.next();
             if (forward ? entry.getKey() < hintIndex : entry.getKey() > hintIndex) {
-                mPrefetchCache.remove(entry.getKey());
+               //mPrefetchCache.remove(entry.getKey());
             }
         }
         int inc = forward ? 1 : -1;

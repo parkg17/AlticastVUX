@@ -66,16 +66,14 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
         mMediaPlayerGlue.setTitle(videoInfo.getTitle());
         mMediaPlayerGlue.setSubtitle(videoInfo.getPath());
         mMediaPlayerGlue.getPlayerAdapter().setDataSource(Uri.parse(videoInfo.getPath()));
-        PlaybackSeekDiskDataProvider.setDemoSeekProvider(mMediaPlayerGlue);
+        PlaybackSeekDiskDataProvider.setDemoSeekProvider(mMediaPlayerGlue, videoInfo.getPath());
 
         ((BaseFragmentActivity)getActivity()).setCommandListener(new CommandListener() {
             @Override
             public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
-                Log.e("TEST", response);
                 MovePattern movePattern = new MovePattern(response.replace(" ",""));
                 if(movePattern.getSeconds() != 0) {
                     mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition()+movePattern.getSeconds()*1000);
-                    Log.e("TEST", movePattern.getSeconds()+"");
                 }
                 return true;
             }

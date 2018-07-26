@@ -21,10 +21,22 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.os.Build;
 import android.support.v17.leanback.media.PlaybackGlue;
 import android.support.v17.leanback.media.PlaybackTransportControlGlue;
+import android.util.Log;
+
+import org.apache.commons.collections4.map.HashedMap;
 
 import java.io.File;
+
+import skku.alticastvux.app.SKKUVuxApp;
+
+import java.util.HashMap;
+
+import skku.alticastvux.util.Util;
 
 /**
  * Sample PlaybackSeekDataProvider that reads bitmaps stored on disk.
@@ -48,9 +60,12 @@ public class PlaybackSeekDiskDataProvider extends PlaybackSeekAsyncDataProvider 
         mPaint = new Paint();
         mPaint.setTextSize(16);
         mPaint.setColor(Color.BLUE);
+        map = new HashMap<>();
     }
 
-    protected Bitmap doInBackground(Object task, int index, long position) {
+    HashMap<Integer, Bitmap> map;
+
+    protected Bitmap doInBackground(Object task, final int index, final long position) {
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
@@ -59,29 +74,29 @@ public class PlaybackSeekDiskDataProvider extends PlaybackSeekAsyncDataProvider 
         if (isCancelled(task)) {
             return null;
         }
-        String path = String.format(mPathPattern, (index + 1));
-        if (new File(path).exists()) {
-            return BitmapFactory.decodeFile(path);
-        } else {
-            Bitmap bmp = Bitmap.createBitmap(160, 160, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bmp);
-            canvas.drawColor(Color.YELLOW);
-            canvas.drawText(path, 10, 80, mPaint);
-            canvas.drawText(Integer.toString(index), 10, 150, mPaint);
-            return bmp;
+
+        if(map.get(index) == null) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(mPathPattern);
+            Bitmap thumb = retriever.getFrameAtTime(position * 1000,
+                    MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            Bitmap s = Bitmap.createScaledBitmap(thumb, thumb.getWidth() / 5, thumb.getHeight() / 5, true);
+            thumb = null;
+            map.put(index, s);
         }
+        return map.get(index);
     }
 
     /**
      * Helper function to set a demo seek provider on PlaybackTransportControlGlue based on
      * duration.
      */
-    public static void setDemoSeekProvider(final PlaybackTransportControlGlue glue) {
+    public static void setDemoSeekProvider(final PlaybackTransportControlGlue glue, final String videoPath) {
         if (glue.isPrepared()) {
             glue.setSeekProvider(new PlaybackSeekDiskDataProvider(
                     glue.getDuration(),
                     glue.getDuration() / 100,
-                    "/sdcard/seek/frame_%04d.jpg"));
+                    videoPath));
         } else {
             glue.addPlayerCallback(new PlaybackGlue.PlayerCallback() {
                 @Override
@@ -93,7 +108,7 @@ public class PlaybackSeekDiskDataProvider extends PlaybackSeekAsyncDataProvider 
                         transportControlGlue.setSeekProvider(new PlaybackSeekDiskDataProvider(
                                 transportControlGlue.getDuration(),
                                 transportControlGlue.getDuration() / 100,
-                                "/sdcard/seek/frame_%04d.jpg"));
+                                videoPath));
                     }
                 }
             });
