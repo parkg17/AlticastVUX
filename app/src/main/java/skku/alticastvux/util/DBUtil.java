@@ -2,6 +2,7 @@ package skku.alticastvux.util;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedHashTreeMap;
+import com.google.gson.reflect.TypeToken;
 
 import skku.alticastvux.model.BookMark;
 import skku.alticastvux.model.Genre;
@@ -104,7 +105,7 @@ public class DBUtil {
         if (pref.length() == 0) {
             videoMap = new LinkedHashTreeMap<>();
         } else {
-            videoMap = (Map) gson.fromJson(pref, Object.class);
+            videoMap = new Gson().fromJson(pref, new TypeToken<Map<String, VideoInfo>>() {}.getType());
         }
     }
 
@@ -113,7 +114,7 @@ public class DBUtil {
         if (pref.length() == 0) {
             bookmarkMap = new LinkedHashTreeMap<>();
         } else {
-            bookmarkMap = (Map) gson.fromJson(pref, Object.class);
+            bookmarkMap = new Gson().fromJson(pref, new TypeToken<Map<String, BookMark>>() {}.getType());
         }
     }
 
