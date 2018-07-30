@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import skku.alticastvux.voiceable.ASREventController;
 import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 /**
  * Created by woorim on 2018. 7. 20..
@@ -27,7 +28,7 @@ public class BaseActivity extends Activity implements CommandListener {
     }
 
     @Override
-    public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
+    public boolean receiveCommand(VoiceablePattern pattern) {
         return false;
     }
 }

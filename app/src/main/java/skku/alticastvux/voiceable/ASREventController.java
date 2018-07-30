@@ -2,19 +2,24 @@ package skku.alticastvux.voiceable;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.alticast.mmuxclient.ClientAPI;
 
 import java.util.ArrayList;
 
 import skku.alticastvux.activity.MainActivity;
+import skku.alticastvux.voiceable.pattern.FindSongPattern;
+import skku.alticastvux.voiceable.pattern.MovePattern;
+import skku.alticastvux.voiceable.pattern.SelectPattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 
 /**
  * Created by dy.yoon on 2018-05-18.
  */
 
-public class ASREventController implements  ClientAPI.Callback<ClientAPI.ASRResult> {
+public class ASREventController implements ClientAPI.Callback<ClientAPI.ASRResult> {
     private ClientAPI.ASRContext asrContext = null;
     private CommandListener listener = null;
 
@@ -24,6 +29,7 @@ public class ASREventController implements  ClientAPI.Callback<ClientAPI.ASRResu
     public static ASREventController getInstance() {
         return SingletonHolder.instance;
     }
+
     private static class SingletonHolder {
         private static final ASREventController instance = new ASREventController();
     }
@@ -31,16 +37,29 @@ public class ASREventController implements  ClientAPI.Callback<ClientAPI.ASRResu
     @Override
     public void callback(ClientAPI.ASRResult asrResult) {
         String response = asrResult.getSpokenResponse();
+        Log.e(getClass().getSimpleName(), response);
         String pattern = asrResult.getMatchedPattern();
         ArrayList<ClientAPI.Entity> entities = asrResult.getMatchedEntities();
 
         if (listener != null) {
-            listener.receiveCommand(pattern, response, entities);
+            VoiceablePattern vp = null;
+            if (FindSongPattern.matches(response)) {
+                vp = new FindSongPattern();
+            } else if (MovePattern.matches(response)) {
+                vp = new MovePattern();
+                vp.parse(response);
+            } else if (SelectPattern.matches(response)) {
+                vp = new SelectPattern();
+                vp.parse(response);
+            }
+            if (vp != null)
+                Log.e(getClass().getSimpleName(), "Result : " + vp.getClass().getSimpleName());
+            listener.receiveCommand(vp);
         }
     }
 
     public void setCommandListener(CommandListener listener, String sceneName) {
-        if(grammar!=null)
+        if (grammar != null)
             resetGrammar(grammar, sceneName);
         this.listener = listener;
     }
@@ -77,20 +96,20 @@ public class ASREventController implements  ClientAPI.Callback<ClientAPI.ASRResu
                 new ClientAPI.Callback<ClientAPI.ASRResult>() {
                     @Override
                     public void callback(ClientAPI.ASRResult asrResult) {
-                        for( String pattern : grammar.getPatterns(sceneName) ) {
+                        for (String pattern : grammar.getPatterns(sceneName)) {
                             asrContext.addASRPattern(pattern, ASREventController.this);
                         }
                     }
                 }
         );
 
-        for( String pattern : grammar.getPatterns(sceneName) ) {
+        for (String pattern : grammar.getPatterns(sceneName)) {
             asrContext.addASRPattern(pattern, ASREventController.this);
         }
     }
 
     public void clearASRPatterns() {
-        if(asrContext==null) return;
+        if (asrContext == null) return;
         asrContext.clearASRPatterns(new ClientAPI.Callback<ClientAPI.ASRResult>() {
             @Override
             public void callback(ClientAPI.ASRResult asrResult) {
@@ -100,23 +119,23 @@ public class ASREventController implements  ClientAPI.Callback<ClientAPI.ASRResu
     }
 
     public void showVoicePrompt() {
-        if(asrContext == null) return;
+        if (asrContext == null) return;
         asrContext.showVoicePrompt();
 
     }
 
     public void hideVoicePrompt() {
-        if(asrContext == null) return;
+        if (asrContext == null) return;
         asrContext.hideVoicePrompt();
     }
 
-    public void openEventPipe(){
-        if(asrContext == null) return;
+    public void openEventPipe() {
+        if (asrContext == null) return;
         asrContext.openEventPipe();
         registerAPIEvents();
     }
 
-    public void registerAPIEvents(){
+    public void registerAPIEvents() {
         ClientAPI.Callback<ClientAPI.ClientEvent> callback = new ClientAPI.Callback<ClientAPI.ClientEvent>() {
             @Override
             public void callback(ClientAPI.ClientEvent event) {

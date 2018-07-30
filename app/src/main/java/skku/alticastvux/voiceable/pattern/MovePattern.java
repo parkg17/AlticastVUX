@@ -8,13 +8,26 @@ import java.util.regex.Pattern;
  * Created by woorim on 2018. 7. 25..
  */
 
-public class MovePattern {
+public class MovePattern extends VoiceablePattern {
 
     private int seconds;
+    private static final String PATTERN = "^(\\d+(시간|분|초)){1,3}(앞(으로)?|뒤(로)?)?$";
 
-    public MovePattern(String s) {
-        String p = "^(\\d+(시간|분|초)){1,3}(앞(으로)?|뒤(로)?)?$";
-        System.out.println(Pattern.matches(p, s));
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public static boolean matches(String response) {
+        return Pattern.matches(PATTERN, response.replace(" ",""));
+    }
+
+    @Override
+    public void parse(String s) {
+        s = s.replace(" ","");
         Pattern pa = Pattern.compile("(\\d+(시간|분|초))");
         Matcher m = pa.matcher(s);
         seconds = 0;
@@ -31,13 +44,5 @@ public class MovePattern {
         if(s.contains("앞")) {
             seconds *= -1;
         }
-    }
-
-    public int getSeconds() {
-        return seconds;
-    }
-
-    public void setSeconds(int seconds) {
-        this.seconds = seconds;
     }
 }

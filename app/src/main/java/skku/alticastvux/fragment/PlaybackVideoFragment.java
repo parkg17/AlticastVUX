@@ -34,6 +34,7 @@ import skku.alticastvux.media.VideoMediaPlayerGlue;
 import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.voiceable.CommandListener;
 import skku.alticastvux.voiceable.pattern.MovePattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 /**
  * Handles video playback with media controls.
@@ -68,12 +69,14 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
         mMediaPlayerGlue.getPlayerAdapter().setDataSource(Uri.parse(videoInfo.getPath()));
         PlaybackSeekDiskDataProvider.setDemoSeekProvider(mMediaPlayerGlue, videoInfo.getPath());
 
-        ((BaseFragmentActivity)getActivity()).setCommandListener(new CommandListener() {
+        ((BaseFragmentActivity) getActivity()).setCommandListener(new CommandListener() {
             @Override
-            public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
-                MovePattern movePattern = new MovePattern(response.replace(" ",""));
-                if(movePattern.getSeconds() != 0) {
-                    mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition()+movePattern.getSeconds()*1000);
+            public boolean receiveCommand(VoiceablePattern pattern) {
+                if (pattern instanceof MovePattern) {
+                    int seconds = ((MovePattern) pattern).getSeconds();
+                    if (seconds != 0) {
+                        mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition() + seconds * 1000);
+                    }
                 }
                 return true;
             }

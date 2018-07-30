@@ -37,6 +37,7 @@ import skku.alticastvux.util.AudioUtil;
 import skku.alticastvux.util.BookMarkUtil;
 import skku.alticastvux.util.Util;
 import skku.alticastvux.voiceable.ASREventController;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 /*
  * MainActivity class that loads {@link MainFragment}.
@@ -107,15 +108,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
-        Toast.makeText(this, response, 0).show();
-        Log.e("AlticastVUX", "entites size : "+entities.size());
-
-        for(int i = 0; i < entities.size(); i++) {
-            Log.e("AlticastVUX", "entity : "+entities.get(i).getType()+" : "+entities.get(i).getValue().toString());
-
-        }
-
+    public boolean receiveCommand(VoiceablePattern pattern) {
         return false;
     }
 }

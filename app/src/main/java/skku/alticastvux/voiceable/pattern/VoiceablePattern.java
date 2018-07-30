@@ -9,8 +9,6 @@ import java.util.ArrayList;
  */
 
 public abstract class VoiceablePattern {
-    public abstract void parseEntities(ArrayList<ClientAPI.Entity> entities);
-    public abstract boolean checkPattern(String pattern);
-    public abstract String getPattern();
-    public abstract String[] getScenes();
+
+    public abstract void parse(String response);
 }

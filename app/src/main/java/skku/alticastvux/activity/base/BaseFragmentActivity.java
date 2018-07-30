@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import skku.alticastvux.voiceable.ASREventController;
 import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 /**
  * Created by woorim on 2018. 7. 20..
@@ -33,8 +34,8 @@ public class BaseFragmentActivity extends FragmentActivity implements CommandLis
     }
 
     @Override
-    public boolean receiveCommand(String pattern, String response, ArrayList<ClientAPI.Entity> entities) {
-        if (listener != null) return listener.receiveCommand(pattern, response, entities);
+    public boolean receiveCommand(VoiceablePattern pattern) {
+        if (listener != null) return listener.receiveCommand(pattern);
         else return false;
     }
 }

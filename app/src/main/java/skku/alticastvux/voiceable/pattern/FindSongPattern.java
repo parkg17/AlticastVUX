@@ -3,6 +3,7 @@ package skku.alticastvux.voiceable.pattern;
 import com.alticast.mmuxclient.ClientAPI;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * Created by woorim on 2018. 7. 23..
@@ -10,25 +11,14 @@ import java.util.ArrayList;
 
 public class FindSongPattern extends VoiceablePattern {
 
-    private static String PATTERN = "[방금|지금] [나온|나오는|들리는|이] (노래|[배경]음악|BGM|브금) (검색[해줘]|찾아[줘]|알려줘|뭐냐|뭐야|뭐여)";
+    private static String PATTERN = "^\\S+(노래|음악|배경음악|브금)(가수)?(검색(해줘)?|찾아(줘)?|알려줘|뭐야|뭐냐|뭐여)?$";
 
-    @Override
-    public void parseEntities(ArrayList<ClientAPI.Entity> entities) {
-
+    public static boolean matches(String response) {
+        return Pattern.matches(PATTERN, response.replaceAll(" ",""));
     }
 
     @Override
-    public boolean checkPattern(String pattern) {
-        return false;
-    }
-
-    @Override
-    public String getPattern() {
-        return PATTERN;
-    }
-
-    @Override
-    public String[] getScenes() {
-        return new String[0];
+    public void parse(String response) {
+        //do nothing
     }
 }
