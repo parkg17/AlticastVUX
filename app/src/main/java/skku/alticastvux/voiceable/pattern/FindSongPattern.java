@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class FindSongPattern extends VoiceablePattern {
 
-    private static String PATTERN = "^\\S+(노래|음악|배경음악|브금)(가수)?(검색(해줘)?|찾아(줘)?|알려줘|뭐야|뭐냐|뭐여)?$";
+    private static String PATTERN = "^(\\S+)?(노래|음악|배경음악|브금)(가수)?(검색(해줘)?|찾아(줘)?|알려줘|뭐야|뭐냐|뭐여)?$";
 
     public static boolean matches(String response) {
         return Pattern.matches(PATTERN, response.replaceAll(" ",""));
