@@ -15,26 +15,18 @@
 package skku.alticastvux.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.alticast.mmuxclient.ClientAPI;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.io.File;
 
 import skku.alticastvux.R;
 import skku.alticastvux.activity.base.BaseActivity;
 import skku.alticastvux.model.VideoInfo;
-import skku.alticastvux.util.AudioFromVideo;
-import skku.alticastvux.util.AudioUtil;
-import skku.alticastvux.util.BookMarkUtil;
+import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.util.Util;
 import skku.alticastvux.voiceable.ASREventController;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
@@ -52,8 +44,7 @@ public class MainActivity extends BaseActivity {
         ArrayList<VideoInfo> videos = Util.getAllVideos();
         ASREventController.getInstance().createASRContext(getApplicationContext());
         checkPermissions();
-
-        BookMarkUtil.DBInit(Util.getAllVideos());
+        DBUtil.getInstance().addVideos(0, videos);
     }
 
     @Override

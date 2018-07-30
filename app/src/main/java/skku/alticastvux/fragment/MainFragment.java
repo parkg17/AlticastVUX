@@ -15,14 +15,12 @@
 package skku.alticastvux.fragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +28,6 @@ import android.support.v17.leanback.app.BackgroundManager;
 import android.support.v17.leanback.app.BrowseFragment;
 import android.support.v17.leanback.widget.ArrayObjectAdapter;
 import android.support.v17.leanback.widget.HeaderItem;
-import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
@@ -48,7 +45,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -61,11 +57,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import skku.alticastvux.activity.DetailsActivity;
 import skku.alticastvux.app.SKKUVuxApp;
 import skku.alticastvux.R;
+import skku.alticastvux.model.Genre;
 import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.presenter.CardInfo;
-import skku.alticastvux.presenter.CardPresenter;
 import skku.alticastvux.presenter.CardPresenterSelector;
-import skku.alticastvux.util.BookMarkUtil;
+import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.util.Util;
 import skku.alticastvux.util.VideoBackgroundManager;
 import skku.alticastvux.widget.LiveCardView;
@@ -128,21 +124,21 @@ public class MainFragment extends BrowseFragment {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         CardPresenterSelector cardPresenterSelector = new CardPresenterSelector(getActivity());
 
-        ArrayList<String> bmList = BookMarkUtil.getAllBookMarkList();
+        ArrayList<Genre> genreList = DBUtil.getInstance().getGenres();
 
 
         int i = 0;
         int j =0;
-        for (String cName : bmList) {
+        for (Genre genre : genreList) {
             ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenterSelector);
-            ArrayList<VideoInfo> vList = BookMarkUtil.getVideosFromBookMark(cName);
+            ArrayList<VideoInfo> vList = DBUtil.getInstance().getVideos(genre.getId());
 
             for (VideoInfo videoInfo : vList) {
                 CardInfo cardInfo = new CardInfo(i, j++, 0);
                 cardInfo.putObject("videoInfo", videoInfo);
                 listRowAdapter.add(cardInfo);
             }
-            HeaderItem header = new HeaderItem(i, cName);
+            HeaderItem header = new HeaderItem(i, genre.getName());
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
             j=0;
             i++;

@@ -1,11 +1,9 @@
 package skku.alticastvux.app;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 
-import skku.alticastvux.util.BookMarkUtil;
+import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.util.SharedPreferencesUtil;
-import skku.alticastvux.voiceable.ASREventController;
 
 /**
  * Created by woorim on 2018. 7. 20..
@@ -21,7 +19,7 @@ public class SKKUVuxApp extends Application {
         instance = this;
 
         SharedPreferencesUtil.init(this);
-        BookMarkUtil.init(this);
+        DBUtil.getInstance();
     }
 
     public static SKKUVuxApp getInstance() {

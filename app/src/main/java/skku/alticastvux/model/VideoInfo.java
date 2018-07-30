@@ -18,13 +18,7 @@ public class VideoInfo implements Serializable {
     private int width;
     private int height;
     private String name;
-
-    public class TYPE {
-        public static final int DRAMA = 0;
-        public static final int MOVIE = 1;
-        public static final int MUSIC = 2;
-        public static final int OTHER = 3;
-    }
+    private int genre;
 
     public long getId() {
         return id;
@@ -96,5 +90,13 @@ public class VideoInfo implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getGenre() {
+        return genre;
+    }
+
+    public void setGenre(int genre) {
+        this.genre = genre;
     }
 }

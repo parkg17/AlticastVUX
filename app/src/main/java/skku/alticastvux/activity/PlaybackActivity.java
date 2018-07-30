@@ -151,17 +151,6 @@ public class PlaybackActivity extends BaseFragmentActivity {
         };
 
         try {
-
-            /*
-            new AudioFromVideo(filename, "/sdcard/output.wav", seconds - 5, 30, new AudioFromVideo.OnFinishListener() {
-                @Override
-                public void finish() {
-                    client.findSong("/sdcard/output.wav", listener);
-                }
-            });
-            */
-
-
             String command[] = Util.makeFFmpegExtractMusicCommand(filename, "/sdcard/output.wav", seconds - 5, 30);
             FFmpegWrapper wrapper = new FFmpegWrapper(PlaybackActivity.this, new FFmpegWrapper.OnCommandFinishListener() {
                 @Override

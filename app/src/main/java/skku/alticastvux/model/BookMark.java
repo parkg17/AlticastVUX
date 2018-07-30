@@ -4,7 +4,7 @@ package skku.alticastvux.model;
  * Created by woorim on 2018. 7. 25..
  */
 
-public class Bookmark {
+public class BookMark {
     private long id;
     private long time; // milliseconds
     private String description;
