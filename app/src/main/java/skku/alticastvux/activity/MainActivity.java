@@ -29,6 +29,7 @@ import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.util.Util;
 import skku.alticastvux.voiceable.ASREventController;
+import skku.alticastvux.voiceable.CommandListener;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 /*
@@ -98,8 +99,16 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+
+    CommandListener listener;
+
+    public void setListener(CommandListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public boolean receiveCommand(VoiceablePattern pattern) {
+        if (listener != null) listener.receiveCommand(pattern);
         return false;
     }
 }

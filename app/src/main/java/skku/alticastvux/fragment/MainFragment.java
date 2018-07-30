@@ -14,6 +14,7 @@
 
 package skku.alticastvux.fragment;
 
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -55,6 +56,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
 import skku.alticastvux.activity.DetailsActivity;
+import skku.alticastvux.activity.MainActivity;
 import skku.alticastvux.app.SKKUVuxApp;
 import skku.alticastvux.R;
 import skku.alticastvux.model.Genre;
@@ -64,9 +66,14 @@ import skku.alticastvux.presenter.CardPresenterSelector;
 import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.util.Util;
 import skku.alticastvux.util.VideoBackgroundManager;
+import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.AddGenrePattern;
+import skku.alticastvux.voiceable.pattern.ChangeGenrePattern;
+import skku.alticastvux.voiceable.pattern.RefreshPattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 import skku.alticastvux.widget.LiveCardView;
 
-public class MainFragment extends BrowseFragment {
+public class MainFragment extends BrowseFragment implements CommandListener {
     private static final String TAG = "MainFragment";
 
     private static final int BACKGROUND_UPDATE_DELAY = 300;
@@ -82,6 +89,7 @@ public class MainFragment extends BrowseFragment {
     private Timer mBackgroundTimer;
     private String mBackgroundUri;
     private BackgroundManager mBackgroundManager;
+    private Object currentItem;
 
     VideoView view;
     List<VideoInfo> videoInfos;
@@ -92,6 +100,7 @@ public class MainFragment extends BrowseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onActivityCreated(savedInstanceState);
+        ((MainActivity) getActivity()).setListener(this);
 
         videoInfos = Util.getAllVideos();
 
@@ -103,6 +112,7 @@ public class MainFragment extends BrowseFragment {
 
         videoBackgroundManager = new VideoBackgroundManager(getActivity().getWindow());
         videoBackgroundManager.setVideoPath(videoInfos.get(0).getPath());
+
     }
 
     @Override
@@ -128,7 +138,7 @@ public class MainFragment extends BrowseFragment {
 
 
         int i = 0;
-        int j =0;
+        int j = 0;
         for (Genre genre : genreList) {
             ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenterSelector);
             ArrayList<VideoInfo> vList = DBUtil.getInstance().getVideos(genre.getId());
@@ -140,7 +150,7 @@ public class MainFragment extends BrowseFragment {
             }
             HeaderItem header = new HeaderItem(i, genre.getName());
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
-            j=0;
+            j = 0;
             i++;
         }
 
@@ -154,6 +164,30 @@ public class MainFragment extends BrowseFragment {
         mRowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
 
         setAdapter(mRowsAdapter);
+    }
+
+    @Override
+    public boolean receiveCommand(VoiceablePattern pattern) {
+        if (pattern instanceof AddGenrePattern) {
+            DBUtil.getInstance().addGenre(((AddGenrePattern) pattern).getGenreName());
+            refresh();
+        } else if (pattern instanceof RefreshPattern) {
+            refresh();
+        } else if (pattern instanceof ChangeGenrePattern) {
+            ChangeGenrePattern c = (ChangeGenrePattern) pattern;
+            for (Genre g : DBUtil.getInstance().getGenres()) {
+                if (g.getName().equals(c.getGenre())) {
+                    Log.e("match", currentItem.getClass().getSimpleName());
+                    CardInfo card = (CardInfo) currentItem;
+                    VideoInfo v = (VideoInfo) card.getObject("videoInfo");
+                    DBUtil.getInstance().removeVideoInfo(v.getGenre(), v);
+                    DBUtil.getInstance().addVideoInfo(g.getId(), v);
+                    refresh();
+                    break;
+                }
+            }
+        }
+        return false;
     }
 
     public class CustomListRowPresenter extends RowPresenter {
@@ -251,11 +285,6 @@ public class MainFragment extends BrowseFragment {
 //                }
 
 
-
-
-
-
-
             }
         });
 
@@ -293,9 +322,9 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
-            if(item instanceof CardInfo) {
+            if (item instanceof CardInfo) {
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.VIDEO_INFO, (VideoInfo) ((CardInfo)item).getObject("videoInfo"));
+                intent.putExtra(DetailsActivity.VIDEO_INFO, (VideoInfo) ((CardInfo) item).getObject("videoInfo"));
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
                         ((LiveCardView) itemViewHolder.view).getMainImageView(),
@@ -327,6 +356,8 @@ public class MainFragment extends BrowseFragment {
         @Override
         public void onItemSelected(Presenter.ViewHolder itemViewHolder, Object item,
                                    RowPresenter.ViewHolder rowViewHolder, Row row) {
+            Log.e("MainFragment", "itemSelected");
+            currentItem = item;
             /*
             if (item instanceof Movie) {
                 mBackgroundUri = ((Movie) item).getBackgroundImageUrl();
@@ -372,7 +403,7 @@ public class MainFragment extends BrowseFragment {
     }
 
 
-    private void refresh(){
+    private void refresh() {
         loadRows();
     }
 }

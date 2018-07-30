@@ -1,5 +1,7 @@
 package skku.alticastvux.util;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedHashTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -74,7 +76,7 @@ public class DBUtil {
             genres = new ArrayList<>();
             addGenre("기본");
         } else {
-            genres = gson.fromJson(pref, ArrayList.class);
+            genres = gson.fromJson(pref, new TypeToken<ArrayList<Genre>>() {}.getType());
         }
     }
 
@@ -102,10 +104,11 @@ public class DBUtil {
 
     public void loadVideoMap() {
         String pref = SharedPreferencesUtil.getString("videoMap", "");
+        Log.e("DBUtil", pref);
         if (pref.length() == 0) {
             videoMap = new LinkedHashTreeMap<>();
         } else {
-            videoMap = new Gson().fromJson(pref, new TypeToken<Map<String, VideoInfo>>() {}.getType());
+            videoMap = new Gson().fromJson(pref, new TypeToken<Map<String, ArrayList<VideoInfo>>>() {}.getType());
         }
     }
 
@@ -114,7 +117,7 @@ public class DBUtil {
         if (pref.length() == 0) {
             bookmarkMap = new LinkedHashTreeMap<>();
         } else {
-            bookmarkMap = new Gson().fromJson(pref, new TypeToken<Map<String, BookMark>>() {}.getType());
+            bookmarkMap = new Gson().fromJson(pref, new TypeToken<Map<String, ArrayList<BookMark>>>() {}.getType());
         }
     }
 

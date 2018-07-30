@@ -9,8 +9,11 @@ import com.alticast.mmuxclient.ClientAPI;
 import java.util.ArrayList;
 
 import skku.alticastvux.activity.MainActivity;
+import skku.alticastvux.voiceable.pattern.AddGenrePattern;
+import skku.alticastvux.voiceable.pattern.ChangeGenrePattern;
 import skku.alticastvux.voiceable.pattern.FindSongPattern;
 import skku.alticastvux.voiceable.pattern.MovePattern;
+import skku.alticastvux.voiceable.pattern.RefreshPattern;
 import skku.alticastvux.voiceable.pattern.SelectPattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
@@ -50,6 +53,14 @@ public class ASREventController implements ClientAPI.Callback<ClientAPI.ASRResul
                 vp.parse(response);
             } else if (SelectPattern.matches(response)) {
                 vp = new SelectPattern();
+                vp.parse(response);
+            } else if(AddGenrePattern.matches(response)) {
+                vp = new AddGenrePattern();
+                vp.parse(response);
+            } else if(RefreshPattern.matches(response)) {
+                vp = new RefreshPattern();
+            } else if(ChangeGenrePattern.matches(response)) {
+                vp = new ChangeGenrePattern();
                 vp.parse(response);
             }
             if (vp != null)
