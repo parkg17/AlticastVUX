@@ -28,11 +28,13 @@ import com.alticast.mmuxclient.ClientAPI;
 import java.util.ArrayList;
 
 import skku.alticastvux.activity.DetailsActivity;
+import skku.alticastvux.activity.PlaybackActivity;
 import skku.alticastvux.activity.base.BaseFragmentActivity;
 import skku.alticastvux.media.PlaybackSeekDiskDataProvider;
 import skku.alticastvux.media.VideoMediaPlayerGlue;
 import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.FindSongPattern;
 import skku.alticastvux.voiceable.pattern.MovePattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
@@ -77,6 +79,11 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
                     if (seconds != 0) {
                         mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition() + seconds * 1000);
                     }
+                } else if (pattern instanceof FindSongPattern) {
+                    String filename = videoInfo.getPath();
+                    long position = mMediaPlayerGlue.getCurrentPosition();
+                    Log.e(getClass().getSimpleName(), "find song");
+                    ((PlaybackActivity) getActivity()).findSong(filename, position);
                 }
                 return true;
             }

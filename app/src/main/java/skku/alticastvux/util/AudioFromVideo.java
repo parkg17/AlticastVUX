@@ -22,7 +22,7 @@ public class AudioFromVideo {
     private int duration;
 
     public interface OnFinishListener {
-        public abstract void finish();
+        void finish();
     }
 
     public AudioFromVideo(String srcVideo, String destAudio, int start, int duration, OnFinishListener listener) {
@@ -33,6 +33,7 @@ public class AudioFromVideo {
         this.duration = duration; //seconds
         ame = new MediaExtractor();
         init();
+        start();
     }
 
     public AudioFromVideo init() {
@@ -75,7 +76,7 @@ public class AudioFromVideo {
             int sampleRate = amf.getInteger(MediaFormat.KEY_SAMPLE_RATE);
             int channels = amf.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
             try {
-                OutputStream os = new FileOutputStream(new File(destFile));
+                OutputStream os = new FileOutputStream(new File(destFile+".tmp"));
                 long count = 0;
                 ame.seekTo(1000000 * start, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
                 while (true) {
@@ -109,6 +110,11 @@ public class AudioFromVideo {
                 os.flush();
                 os.close();
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                AudioUtil.rawToWave(new File(destFile+".tmp"), new File(destFile), sampleRate, channels);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             if(listener != null) {

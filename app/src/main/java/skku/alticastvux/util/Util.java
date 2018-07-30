@@ -85,8 +85,19 @@ public class Util {
         return thumb;
     }
 
-    public static String makeFFmpegExtractMusicCommand(String input, String output, int start, int duration) {
-        return String.format("-ss %d -t %d -i %s -acodec pcm_s16le -y %s", start, duration, input, output);
+    public static String[] makeFFmpegExtractMusicCommand(String input, String output, int start, int duration) {
+        String[] arg = new String[10];
+        arg[0] = "-ss";
+        arg[1] = start+"";
+        arg[2] = "-t";
+        arg[3] = duration+"";
+        arg[4] = "-i";
+        arg[5] = input;
+        arg[6] = "-acodec";
+        arg[7] = "pcm_s16le";
+        arg[8] = "-y";
+        arg[9] = output;
+        return arg;
     }
 
     public static String makeFFmpegExtractThumbnailCommand(String input, String output, int time) {

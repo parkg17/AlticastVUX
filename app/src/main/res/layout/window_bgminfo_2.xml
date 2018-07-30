@@ -44,6 +44,7 @@
                             android:layout_height="wrap_content"
                             android:text="노래이름"
                             android:textStyle="bold"
+                            android:textColor="#333"
                             android:textSize="15sp" />
 
                         <TextView
@@ -75,6 +76,7 @@
                             android:id="@+id/tv_song_album"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#333"
                             android:text="앨범"
                             android:textSize="15sp" />
 
