@@ -16,17 +16,20 @@ public class CardPresenterSelector extends PresenterSelector {
 
     private Context mContext;
 
-    public CardPresenterSelector(Context context){
+    public CardPresenterSelector(Context context) {
         mContext = context;
     }
 
     @Override
     public Presenter getPresenter(Object item) {
-        CardInfo cardInfo = (CardInfo) item;
-        if(cardInfo.getCol() >= 1) {
+        return new CardPresenter();
+        /*
+                CardInfo cardInfo = (CardInfo) item;
+        if (cardInfo.getCol() >= 1) {
             return new CardPresenter();
         } else {
             return new VideoTypePresenter();
         }
+        */
     }
 }

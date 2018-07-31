@@ -17,6 +17,7 @@ package skku.alticastvux.presenter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
+import android.os.Handler;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.Presenter;
 import android.util.Log;
@@ -66,16 +67,25 @@ public class CardPresenter extends Presenter {
 
         mDefaultCardImage = parent.getResources().getDrawable(R.drawable.movie);
 
+        final Handler handler = new Handler();
         final LiveCardView liveCardView = new LiveCardView(parent.getContext()) {
+            boolean pselect = false;
             @Override
             public void setSelected(boolean selected) {
+                pselect = selected;
                 if (selected) {
-                    startVideo();
-                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                    retriever.setDataSource(videoInfo.getPath());
-                    long duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-                    setPosition((int)duration/2);
-                    startVideo();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(pselect) {
+                                startVideo();
+                                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                                retriever.setDataSource(videoInfo.getPath());
+                                long duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                                setPosition((int)duration/2);
+                            }
+                        }
+                    }, 600);
                 } else {
                     stopVideo();
                 }

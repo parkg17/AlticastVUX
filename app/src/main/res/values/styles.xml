@@ -6,7 +6,7 @@
     </style>
 
     <style name="AppTheme.RowHeader" parent="Widget.Leanback.Row.Header">
-        <item name="android:visibility">gone</item>
+        <!-- <item name="android:visibility">gone</item> -->
     </style>
 
     <style name="LoadingCardStyle">

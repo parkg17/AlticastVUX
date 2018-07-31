@@ -70,6 +70,7 @@ import skku.alticastvux.voiceable.CommandListener;
 import skku.alticastvux.voiceable.pattern.AddGenrePattern;
 import skku.alticastvux.voiceable.pattern.ChangeGenrePattern;
 import skku.alticastvux.voiceable.pattern.RefreshPattern;
+import skku.alticastvux.voiceable.pattern.ShowDetailPattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 import skku.alticastvux.widget.LiveCardView;
 
@@ -111,7 +112,7 @@ public class MainFragment extends BrowseFragment implements CommandListener {
         setupEventListeners();
 
         videoBackgroundManager = new VideoBackgroundManager(getActivity().getWindow());
-        videoBackgroundManager.setVideoPath(videoInfos.get(0).getPath());
+        videoBackgroundManager.setVideoPath(videoInfos.get((int) (Math.random() * videoInfos.size())).getPath());
 
     }
 
@@ -185,6 +186,12 @@ public class MainFragment extends BrowseFragment implements CommandListener {
                     refresh();
                     break;
                 }
+            }
+        } else if(pattern instanceof ShowDetailPattern) {
+            if (currentItem instanceof CardInfo) {
+                Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                intent.putExtra(DetailsActivity.VIDEO_INFO, (VideoInfo) ((CardInfo) currentItem).getObject("videoInfo"));
+                getActivity().startActivity(intent);
             }
         }
         return false;

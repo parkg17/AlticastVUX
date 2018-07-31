@@ -22,6 +22,7 @@ import android.support.v17.leanback.media.MediaPlayerAdapter;
 import android.support.v17.leanback.media.MediaPlayerGlue;
 import android.support.v17.leanback.media.PlaybackGlue;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alticast.mmuxclient.ClientAPI;
 
@@ -32,8 +33,11 @@ import skku.alticastvux.activity.PlaybackActivity;
 import skku.alticastvux.activity.base.BaseFragmentActivity;
 import skku.alticastvux.media.PlaybackSeekDiskDataProvider;
 import skku.alticastvux.media.VideoMediaPlayerGlue;
+import skku.alticastvux.model.BookMark;
 import skku.alticastvux.model.VideoInfo;
+import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.AddBookMarkPattern;
 import skku.alticastvux.voiceable.pattern.FindSongPattern;
 import skku.alticastvux.voiceable.pattern.MovePattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
@@ -41,16 +45,17 @@ import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 /**
  * Handles video playback with media controls.
  */
-public class PlaybackVideoFragment extends VideoSupportFragment {
+public class PlaybackVideoFragment extends VideoSupportFragment implements CommandListener {
     private static final String TAG = "PlaybackVideoFragment";
 
     private VideoMediaPlayerGlue<MediaPlayerAdapter> mMediaPlayerGlue;
+    VideoInfo videoInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final VideoInfo videoInfo = (VideoInfo) getActivity()
+        ((PlaybackActivity)getActivity()).setCommandListener(this);
+        videoInfo = (VideoInfo) getActivity()
                 .getIntent().getSerializableExtra(DetailsActivity.VIDEO_INFO);
 
         VideoSupportFragmentGlueHost glueHost =
@@ -96,5 +101,19 @@ public class PlaybackVideoFragment extends VideoSupportFragment {
         if (mMediaPlayerGlue != null) {
             mMediaPlayerGlue.pause();
         }
+    }
+
+
+    @Override
+    public boolean receiveCommand(VoiceablePattern pattern) {
+        if (pattern instanceof AddBookMarkPattern) {
+            AddBookMarkPattern ap = (AddBookMarkPattern) pattern;
+            Toast.makeText(getActivity(), "북마크를 추가했습니다.", 0).show();
+            BookMark b = new BookMark();
+            b.setId(videoInfo.getId());
+            b.setTime(mMediaPlayerGlue.getCurrentPosition()); //ms
+            DBUtil.getInstance().addBookMark((int) videoInfo.getId(), b);
+        }
+        return false;
     }
 }

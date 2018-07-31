@@ -1,6 +1,7 @@
 package skku.alticastvux.widget;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -44,6 +45,7 @@ public class PreviewCardView extends FrameLayout {
 
     private void init() {
         View view = inflate(getContext(), R.layout.widget_preview_card, this);
+        view.setBackgroundColor(getResources().getColor(R.color.default_header));
         mMainContainer = (FrameLayout) view.findViewById(R.id.main_container);
         mVideoView = (LoopingVideoView) view.findViewById(R.id.main_video);
         mImageView = (ImageView) view.findViewById(R.id.main_image);
@@ -63,16 +65,23 @@ public class PreviewCardView extends FrameLayout {
         return mImageView;
     }
 
+    Handler handler = new Handler();
+
     public void setLoading() {
         mOverlayView.setVisibility(View.VISIBLE);
         mProgressCard.setVisibility(View.VISIBLE);
         mVideoView.setVisibility(View.VISIBLE);
+        mOverlayView.setVisibility(View.INVISIBLE);
+        mProgressCard.setVisibility(View.INVISIBLE);
         mVideoView.setupMediaPlayer(mVideoUrl, new LoopingVideoView.OnVideoReadyListener() {
             @Override
             public void onVideoReady() {
-                mOverlayView.setVisibility(View.INVISIBLE);
-                mProgressCard.setVisibility(View.INVISIBLE);
-                mImageView.setVisibility(View.INVISIBLE);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageView.setVisibility(View.INVISIBLE);
+                    }
+                }, 300);
             }
 
             @Override

@@ -55,12 +55,16 @@ import skku.alticastvux.ffmpeg.FFmpegWrapper;
 import skku.alticastvux.fragment.PlaybackVideoFragment;
 import skku.alticastvux.gracenote.GracenoteClient;
 import skku.alticastvux.util.AudioFromVideo;
+import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.util.Util;
+import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.AddBookMarkPattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
 /**
  * Loads {@link PlaybackVideoFragment}.
  */
-public class PlaybackActivity extends BaseFragmentActivity {
+public class PlaybackActivity extends BaseFragmentActivity implements CommandListener {
 
     @BindView(R.id.tv_song_album)
     TextView tv_album;
@@ -92,7 +96,7 @@ public class PlaybackActivity extends BaseFragmentActivity {
     GracenoteClient client;
 
     public void findSong(String filename, long position) {
-        Log.e(getClass().getSimpleName(), "find song : "+filename+" "+position/1000);
+        Log.e(getClass().getSimpleName(), "find song : " + filename + " " + position / 1000);
         pAlbum = null;
         final int seconds = (int) (position / 1000L);
 

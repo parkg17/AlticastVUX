@@ -52,12 +52,7 @@ public class LoopingVideoView extends VideoView {
                 mMediaPlayer.setVolume(0, 0);
                 //mMediaPlayer.seekTo(5000);
                 mMediaPlayer.start();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        onVideoReadyListener.onVideoReady();
-                    }
-                }, 100);
+                onVideoReadyListener.onVideoReady();
             }
         });
 

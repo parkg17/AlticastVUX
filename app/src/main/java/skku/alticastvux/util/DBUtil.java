@@ -122,6 +122,9 @@ public class DBUtil {
     }
 
     public ArrayList<BookMark> getBookMarkList(int i) {
+        if(bookmarkMap.get(String.valueOf(i)) == null) {
+            bookmarkMap.put(String.valueOf(i), new ArrayList<BookMark>());
+        }
         return bookmarkMap.get(String.valueOf(i));
     }
 
