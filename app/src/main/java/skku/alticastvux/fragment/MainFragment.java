@@ -55,6 +55,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
+import skku.alticastvux.activity.BookmarkActivity;
 import skku.alticastvux.activity.DetailsActivity;
 import skku.alticastvux.activity.MainActivity;
 import skku.alticastvux.app.SKKUVuxApp;
@@ -72,27 +73,18 @@ import skku.alticastvux.voiceable.pattern.ChangeGenrePattern;
 import skku.alticastvux.voiceable.pattern.RefreshPattern;
 import skku.alticastvux.voiceable.pattern.ShowDetailPattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
+import skku.alticastvux.widget.CustomTitleView;
 import skku.alticastvux.widget.LiveCardView;
 
 public class MainFragment extends BrowseFragment implements CommandListener {
     private static final String TAG = "MainFragment";
 
-    private static final int BACKGROUND_UPDATE_DELAY = 300;
     private static final int GRID_ITEM_WIDTH = 200;
     private static final int GRID_ITEM_HEIGHT = 200;
-    private static final int NUM_ROWS = 6;
-    private static final int NUM_COLS = 15;
-
-    private final Handler mHandler = new Handler();
     private ArrayObjectAdapter mRowsAdapter;
-    private Drawable mDefaultBackground;
     private DisplayMetrics mMetrics;
-    private Timer mBackgroundTimer;
-    private String mBackgroundUri;
     private BackgroundManager mBackgroundManager;
     private Object currentItem;
-
-    VideoView view;
     List<VideoInfo> videoInfos;
 
     VideoBackgroundManager videoBackgroundManager;
@@ -111,10 +103,14 @@ public class MainFragment extends BrowseFragment implements CommandListener {
 
         setupEventListeners();
 
+        setTitle("비디오");
+
         videoBackgroundManager = new VideoBackgroundManager(getActivity().getWindow());
         videoBackgroundManager.setVideoPath(videoInfos.get((int) (Math.random() * videoInfos.size())).getPath());
 
+
     }
+
 
     @Override
     public void onResume() {
@@ -122,14 +118,6 @@ public class MainFragment extends BrowseFragment implements CommandListener {
         videoBackgroundManager.startVideo();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (null != mBackgroundTimer) {
-            Log.d(TAG, "onDestroy: " + mBackgroundTimer.toString());
-            mBackgroundTimer.cancel();
-        }
-    }
 
     private void loadRows() {
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
@@ -155,6 +143,7 @@ public class MainFragment extends BrowseFragment implements CommandListener {
             i++;
         }
 
+        /*
         HeaderItem gridHeader = new HeaderItem(i, "PREFERENCES");
 
         GridItemPresenter mGridPresenter = new GridItemPresenter();
@@ -163,6 +152,8 @@ public class MainFragment extends BrowseFragment implements CommandListener {
         gridRowAdapter.add(getString(R.string.error_fragment));
         gridRowAdapter.add(getResources().getString(R.string.personal_settings));
         mRowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
+
+        */
 
         setAdapter(mRowsAdapter);
     }
@@ -187,7 +178,7 @@ public class MainFragment extends BrowseFragment implements CommandListener {
                     break;
                 }
             }
-        } else if(pattern instanceof ShowDetailPattern) {
+        } else if (pattern instanceof ShowDetailPattern) {
             if (currentItem instanceof CardInfo) {
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra(DetailsActivity.VIDEO_INFO, (VideoInfo) ((CardInfo) currentItem).getObject("videoInfo"));
@@ -229,7 +220,6 @@ public class MainFragment extends BrowseFragment implements CommandListener {
     private void prepareBackgroundManager() {
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
         mBackgroundManager.attach(getActivity().getWindow());
-        mDefaultBackground = getResources().getDrawable(R.drawable.default_background);
         mMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
     }
@@ -253,6 +243,7 @@ public class MainFragment extends BrowseFragment implements CommandListener {
 
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getActivity(), BookmarkActivity.class));
                 /*
                 For Test Zone
                  */
@@ -297,32 +288,6 @@ public class MainFragment extends BrowseFragment implements CommandListener {
 
         setOnItemViewClickedListener(new ItemViewClickedListener());
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
-    }
-
-    protected void updateBackground(String uri) {
-        int width = mMetrics.widthPixels;
-        int height = mMetrics.heightPixels;
-        Glide.with(getActivity())
-                .load(uri)
-                .centerCrop()
-                .error(mDefaultBackground)
-                .into(new SimpleTarget<GlideDrawable>(width, height) {
-                    @Override
-                    public void onResourceReady(GlideDrawable resource,
-                                                GlideAnimation<? super GlideDrawable>
-                                                        glideAnimation) {
-                        mBackgroundManager.setDrawable(resource);
-                    }
-                });
-        mBackgroundTimer.cancel();
-    }
-
-    private void startBackgroundTimer() {
-        if (null != mBackgroundTimer) {
-            mBackgroundTimer.cancel();
-        }
-        mBackgroundTimer = new Timer();
-        mBackgroundTimer.schedule(new UpdateBackgroundTask(), BACKGROUND_UPDATE_DELAY);
     }
 
     private final class ItemViewClickedListener implements OnItemViewClickedListener {
@@ -373,19 +338,6 @@ public class MainFragment extends BrowseFragment implements CommandListener {
         }
     }
 
-    private class UpdateBackgroundTask extends TimerTask {
-
-        @Override
-        public void run() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    updateBackground(mBackgroundUri);
-                }
-            });
-        }
-    }
-
     private class GridItemPresenter extends Presenter {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -408,7 +360,6 @@ public class MainFragment extends BrowseFragment implements CommandListener {
         public void onUnbindViewHolder(ViewHolder viewHolder) {
         }
     }
-
 
     private void refresh() {
         loadRows();

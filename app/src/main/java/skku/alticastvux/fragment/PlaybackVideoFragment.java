@@ -16,6 +16,7 @@ package skku.alticastvux.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v17.leanback.app.VideoSupportFragment;
 import android.support.v17.leanback.app.VideoSupportFragmentGlueHost;
 import android.support.v17.leanback.media.MediaPlayerAdapter;
@@ -50,14 +51,16 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
 
     private VideoMediaPlayerGlue<MediaPlayerAdapter> mMediaPlayerGlue;
     VideoInfo videoInfo;
+    Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((PlaybackActivity)getActivity()).setCommandListener(this);
+        ((PlaybackActivity) getActivity()).setCommandListener(this);
         videoInfo = (VideoInfo) getActivity()
                 .getIntent().getSerializableExtra(DetailsActivity.VIDEO_INFO);
 
+        final int time = getActivity().getIntent().getIntExtra("TIME", 0);
         VideoSupportFragmentGlueHost glueHost =
                 new VideoSupportFragmentGlueHost(PlaybackVideoFragment.this);
 
@@ -76,23 +79,12 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
         mMediaPlayerGlue.getPlayerAdapter().setDataSource(Uri.parse(videoInfo.getPath()));
         PlaybackSeekDiskDataProvider.setDemoSeekProvider(mMediaPlayerGlue, videoInfo.getPath());
 
-        ((BaseFragmentActivity) getActivity()).setCommandListener(new CommandListener() {
+        handler.postDelayed(new Runnable() {
             @Override
-            public boolean receiveCommand(VoiceablePattern pattern) {
-                if (pattern instanceof MovePattern) {
-                    int seconds = ((MovePattern) pattern).getSeconds();
-                    if (seconds != 0) {
-                        mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition() + seconds * 1000);
-                    }
-                } else if (pattern instanceof FindSongPattern) {
-                    String filename = videoInfo.getPath();
-                    long position = mMediaPlayerGlue.getCurrentPosition();
-                    Log.e(getClass().getSimpleName(), "find song");
-                    ((PlaybackActivity) getActivity()).findSong(filename, position);
-                }
-                return true;
+            public void run() {
+                mMediaPlayerGlue.seekTo(time);
             }
-        });
+        }, 3000);
     }
 
     @Override
@@ -106,7 +98,17 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
 
     @Override
     public boolean receiveCommand(VoiceablePattern pattern) {
-        if (pattern instanceof AddBookMarkPattern) {
+        if (pattern instanceof MovePattern) {
+            int seconds = ((MovePattern) pattern).getSeconds();
+            if (seconds != 0) {
+                mMediaPlayerGlue.seekTo(mMediaPlayerGlue.getCurrentPosition() + seconds * 1000);
+            }
+        } else if (pattern instanceof FindSongPattern) {
+            String filename = videoInfo.getPath();
+            long position = mMediaPlayerGlue.getCurrentPosition();
+            Log.e(getClass().getSimpleName(), "find song");
+            ((PlaybackActivity) getActivity()).findSong(filename, position);
+        } else if (pattern instanceof AddBookMarkPattern) {
             AddBookMarkPattern ap = (AddBookMarkPattern) pattern;
             Toast.makeText(getActivity(), "북마크를 추가했습니다.", 0).show();
             BookMark b = new BookMark();

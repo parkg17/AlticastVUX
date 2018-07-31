@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class AddBookMarkPattern extends VoiceablePattern {
 
     public static boolean matches(String response) {
-        return Pattern.matches("북마크.+추가", response);
+        return Pattern.matches(".+가", response);
     }
 
     @Override

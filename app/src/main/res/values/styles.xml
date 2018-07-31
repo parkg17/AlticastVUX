@@ -3,6 +3,14 @@
 
     <style name="AppTheme" parent="@style/Theme.Leanback">
         <item name="rowHeaderStyle">@style/AppTheme.RowHeader</item>
+        <!-- <item name="browseTitleViewLayout">@layout/titleview</item> -->
+        <!-- <item name="browseRowsMarginTop">120dp</item> -->
+        <item name="searchOrbViewStyle">@style/CustomSearchOrbView</item>
+    </style>
+
+
+    <style name="CustomSearchOrbView" parent="Widget.Leanback.SearchOrbViewStyle">
+        <!-- <item name="searchOrbIcon">@drawable/category_documentary</item> -->
     </style>
 
     <style name="AppTheme.RowHeader" parent="Widget.Leanback.Row.Header">
@@ -17,6 +25,10 @@
         <item name="tag_background_color">@color/default_header</item>
         <item name="tag_text_color">@color/white</item>
         <item name="tag_icon">@drawable/ic_tag</item>
+    </style>
+
+    <style name="AppTheme.CustomTitle" parent="Theme.Leanback.Browse">
+
     </style>
 
     <style name="IconCardStyle">

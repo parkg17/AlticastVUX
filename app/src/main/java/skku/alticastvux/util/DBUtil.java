@@ -1,11 +1,13 @@
 package skku.alticastvux.util;
 
+import android.icu.util.ULocale;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedHashTreeMap;
 import com.google.gson.reflect.TypeToken;
 
+import skku.alticastvux.model.BookCategory;
 import skku.alticastvux.model.BookMark;
 import skku.alticastvux.model.Genre;
 import skku.alticastvux.model.VideoInfo;
@@ -26,9 +28,16 @@ public class DBUtil {
     }
 
     private ArrayList<Genre> genres;
+    private ArrayList<BookCategory> bookCategories;
+
+    public ArrayList<BookCategory> getBookCategories() {
+        return bookCategories;
+    }
 
     private Map<String, ArrayList<VideoInfo>> videoMap; //genre id, videos
+    private Map<Long, VideoInfo> videoMapWithId; //video id
     private Map<String, ArrayList<BookMark>> bookmarkMap; // video id, bookmarks
+
     private Gson gson;
 
     public static DBUtil getInstance() {
@@ -43,6 +52,7 @@ public class DBUtil {
         loadGenre();
         loadVideoMap();
         loadBookMarkMap();
+        loadCategory();
     }
 
     public void addVideos(int i, ArrayList<VideoInfo> videoInfos) {
@@ -80,6 +90,28 @@ public class DBUtil {
         }
     }
 
+    public void loadCategory() {
+        String pref = SharedPreferencesUtil.getString("categories", "");
+        if (pref.length() == 0) {
+            bookCategories = new ArrayList<>();
+            addCategory("기본");
+        } else {
+            bookCategories = gson.fromJson(pref, new TypeToken<ArrayList<BookCategory>>() {}.getType());
+        }
+    }
+
+
+    public void saveCategory() {
+        SharedPreferencesUtil.putString("categories", gson.toJson(bookCategories));
+    }
+
+    public BookCategory addCategory(String s) {
+        BookCategory c = new BookCategory(bookCategories.size(), s);
+        bookCategories.add(c);
+        saveCategory();
+        return c;
+    }
+
     public void saveGenre() {
         SharedPreferencesUtil.putString("genres", gson.toJson(genres));
     }
@@ -102,13 +134,23 @@ public class DBUtil {
         }
     }
 
+    public VideoInfo getVideoWithId(Long id) {
+        return videoMapWithId.get(id);
+    }
+
     public void loadVideoMap() {
+        videoMapWithId = new HashMap<Long, VideoInfo>();
         String pref = SharedPreferencesUtil.getString("videoMap", "");
         Log.e("DBUtil", pref);
         if (pref.length() == 0) {
             videoMap = new LinkedHashTreeMap<>();
         } else {
             videoMap = new Gson().fromJson(pref, new TypeToken<Map<String, ArrayList<VideoInfo>>>() {}.getType());
+            for(String s : videoMap.keySet()) {
+                for(VideoInfo v: videoMap.get(s)) {
+                    videoMapWithId.put(v.getId(), v);
+                }
+            }
         }
     }
 
@@ -121,6 +163,16 @@ public class DBUtil {
         }
     }
 
+    public ArrayList<BookMark> getAllBookMarks() {
+        ArrayList<BookMark> bookMarks = new ArrayList<BookMark>();
+        for (String s: bookmarkMap.keySet()) {
+            for(BookMark b: bookmarkMap.get(s)) {
+                bookMarks.add(b);
+            }
+        }
+        return bookMarks;
+    }
+
     public ArrayList<BookMark> getBookMarkList(int i) {
         if(bookmarkMap.get(String.valueOf(i)) == null) {
             bookmarkMap.put(String.valueOf(i), new ArrayList<BookMark>());
@@ -128,7 +180,9 @@ public class DBUtil {
         return bookmarkMap.get(String.valueOf(i));
     }
 
+    // 북마크 카테고리
     public void addBookMark(int i, BookMark b) {
+        b.setVideoId(i);
         if(bookmarkMap.get(String.valueOf(i)) == null) {
             bookmarkMap.put(String.valueOf(i), new ArrayList<BookMark>());
         }
@@ -141,6 +195,7 @@ public class DBUtil {
             videoMap.put(String.valueOf(i), new ArrayList<VideoInfo>());
         }
         info.setGenre(i);
+        videoMapWithId.put(info.getId(), info);
         videoMap.get(String.valueOf(i)).add(info);
         SharedPreferencesUtil.putString("videoMap", gson.toJson(videoMap));
     }

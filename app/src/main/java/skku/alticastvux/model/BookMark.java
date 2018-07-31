@@ -5,9 +5,12 @@ package skku.alticastvux.model;
  */
 
 public class BookMark {
-    private long id;
+    private long id; //video id
+    private long videoid;
     private long time; // milliseconds
+    private int category = 0;
     private String description;
+    transient private VideoInfo videoInfo;
 
     public long getId() {
         return id;
@@ -31,5 +34,29 @@ public class BookMark {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getCategory() {
+        return category;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+    public VideoInfo getVideoInfo() {
+        return videoInfo;
+    }
+
+    public void setVideoInfo(VideoInfo videoInfo) {
+        this.videoInfo = videoInfo;
+    }
+
+    public long getVideoId() {
+        return videoid;
+    }
+
+    public void setVideoId(long videoid) {
+        this.videoid = videoid;
     }
 }

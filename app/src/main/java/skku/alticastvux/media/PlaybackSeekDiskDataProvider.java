@@ -75,7 +75,7 @@ public class PlaybackSeekDiskDataProvider extends PlaybackSeekAsyncDataProvider 
             return null;
         }
 
-        if(map.get(index) == null) {
+        if (map.get(index) == null) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(mPathPattern);
             Bitmap thumb = retriever.getFrameAtTime(position * 1000,
