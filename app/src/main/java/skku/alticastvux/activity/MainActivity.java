@@ -15,13 +15,17 @@
 package skku.alticastvux.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.io.File;
 
 import skku.alticastvux.R;
 import skku.alticastvux.activity.base.BaseActivity;
@@ -37,15 +41,18 @@ import skku.alticastvux.voiceable.pattern.VoiceablePattern;
  */
 public class MainActivity extends BaseActivity {
 
-    private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+    private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<VideoInfo> videos = Util.getAllVideos();
-        ASREventController.getInstance().createASRContext(getApplicationContext());
+        /*
+        final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        final Uri contentUri = Uri.fromFile(new File("/sdcard/test.mp4"));
+        scanIntent.setData(contentUri);
+        sendBroadcast(scanIntent);
+        */
         checkPermissions();
-        DBUtil.getInstance().addVideos(0, videos);
     }
 
     @Override
@@ -55,6 +62,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
+        ArrayList<VideoInfo> videos = Util.getAllVideos();
+        ASREventController.getInstance().createASRContext(getApplicationContext());
+        DBUtil.getInstance().addVideos(0, videos);
         setContentView(R.layout.activity_main);
     }
 

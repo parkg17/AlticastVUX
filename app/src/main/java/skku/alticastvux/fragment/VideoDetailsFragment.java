@@ -148,18 +148,18 @@ public class VideoDetailsFragment extends DetailsFragment {
         actionAdapter.add(
                 new Action(
                         ACTION_WATCH_TRAILER,
-                        getResources().getString(R.string.watch_trailer_1),
-                        getResources().getString(R.string.watch_trailer_2)));
+                        "동영상 보기",
+                        ""));
         actionAdapter.add(
                 new Action(
                         ACTION_RENT,
-                        getResources().getString(R.string.rent_1),
-                        getResources().getString(R.string.rent_2)));
+                        "북마크에 저장",
+                        ""));
         actionAdapter.add(
                 new Action(
                         ACTION_BUY,
-                        getResources().getString(R.string.buy_1),
-                        getResources().getString(R.string.buy_2)));
+                        "관련 동영상 보기",
+                        ""));
         row.setActionsAdapter(actionAdapter);
 
         mAdapter.add(row);

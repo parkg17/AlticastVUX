@@ -107,8 +107,6 @@ public class MainFragment extends BrowseFragment implements CommandListener {
 
         videoBackgroundManager = new VideoBackgroundManager(getActivity().getWindow());
         videoBackgroundManager.setVideoPath(videoInfos.get((int) (Math.random() * videoInfos.size())).getPath());
-
-
     }
 
 
@@ -297,22 +295,25 @@ public class MainFragment extends BrowseFragment implements CommandListener {
             if (item instanceof CardInfo) {
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra(DetailsActivity.VIDEO_INFO, (VideoInfo) ((CardInfo) item).getObject("videoInfo"));
+                /*
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
                         ((LiveCardView) itemViewHolder.view).getMainImageView(),
-                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
+                        DetailsActivity.SHARED_ELEMENT_NAME).toBundle();*/
+                getActivity().startActivity(intent /*, bundle*/);
             }
 
             if (item instanceof VideoInfo) {
                 VideoInfo videoInfo = (VideoInfo) item;
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.putExtra(DetailsActivity.VIDEO_INFO, videoInfo);
+                /*
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
                         ((LiveCardView) itemViewHolder.view).getMainImageView(),
                         DetailsActivity.SHARED_ELEMENT_NAME).toBundle();
-                getActivity().startActivity(intent, bundle);
+                        */
+                getActivity().startActivity(intent /*, bundle*/);
             } else if (item instanceof String) {
                 if (((String) item).contains(getString(R.string.error_fragment))) {
 

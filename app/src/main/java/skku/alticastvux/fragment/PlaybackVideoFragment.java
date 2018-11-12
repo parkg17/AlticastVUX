@@ -95,7 +95,6 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
         }
     }
 
-
     @Override
     public boolean receiveCommand(VoiceablePattern pattern) {
         if (pattern instanceof MovePattern) {
