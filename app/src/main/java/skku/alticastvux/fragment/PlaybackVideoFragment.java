@@ -106,7 +106,7 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
             String filename = videoInfo.getPath();
             long position = mMediaPlayerGlue.getCurrentPosition();
             Log.e(getClass().getSimpleName(), "find song");
-            ((PlaybackActivity) getActivity()).findSong(filename, position);
+            //((PlaybackActivity) getActivity()).findSong(filename, position);
         } else if (pattern instanceof AddBookMarkPattern) {
             AddBookMarkPattern ap = (AddBookMarkPattern) pattern;
             Toast.makeText(getActivity(), "북마크를 추가했습니다.", 0).show();

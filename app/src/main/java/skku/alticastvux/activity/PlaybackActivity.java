@@ -73,7 +73,6 @@ import skku.alticastvux.baedalfragment.MenuSearchFragment;
 import skku.alticastvux.data.StoreMenu;
 import skku.alticastvux.ffmpeg.FFmpegWrapper;
 import skku.alticastvux.fragment.PlaybackVideoFragment;
-import skku.alticastvux.gracenote.GracenoteClient;
 import skku.alticastvux.model.Menu;
 import skku.alticastvux.util.AudioFromVideo;
 import skku.alticastvux.util.DBUtil;
@@ -119,6 +118,8 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
     int width = 0;
 
     boolean minimized = false;
+
+    Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -271,6 +272,7 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
         }
     }
 
+    /*
     GracenoteClient client;
 
     public void findSong(String filename, long position) {
@@ -417,6 +419,7 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 Drawable coverArt = null;
                 GracenoteClient client = new GracenoteClient(PlaybackActivity.this);
                 if (coverArtUrl != null && !coverArtUrl.isEmpty()) {
@@ -429,6 +432,7 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
                     }
                     setCoverArt(coverArt);
                 }
+
             }
         }).start();
     }
@@ -445,4 +449,5 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
             }
         });
     }
+    */
 }

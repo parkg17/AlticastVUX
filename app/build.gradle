@@ -37,5 +37,5 @@ dependencies {
     //test
     //implementation 'com.hitherejoe.leanback:leanbackcards:0.1.0'
     implementation 'com.mikhaellopez:circularimageview:3.1.0'
-    implementation project(path: ':FFmpegAndroid')
+    //implementation project(path: ':FFmpegAndroid')
 }
