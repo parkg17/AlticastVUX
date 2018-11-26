@@ -99,4 +99,35 @@ public class VideoInfo implements Serializable {
     public void setGenre(int genre) {
         this.genre = genre;
     }
+
+    public String getTime(){
+        int hour,min,sec;
+        int dur = ((int)(this.duration))/1000;
+        String len="";
+
+        hour = dur/3600;
+        dur %= 3600;
+        min = dur/60;
+        sec = dur%60;
+        if(hour != 0) {
+            len += hour + ":";
+            if((min/10) == 0)
+                len += "0" + min + ":";
+            else
+                len += min + ":";
+            if((sec/10) == 0)
+                len += "0" + sec;
+            else
+                len += sec;
+        }else if(min != 0){
+            len += min + ":";
+            if((sec/10) == 0)
+                len += "0" + sec;
+            else
+                len += sec;
+        }else
+            len += sec;
+
+        return len;
+    }
 }

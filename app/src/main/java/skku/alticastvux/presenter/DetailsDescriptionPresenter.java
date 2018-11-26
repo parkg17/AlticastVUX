@@ -25,9 +25,9 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
         VideoInfo videoInfo = (VideoInfo) item;
 
         if (videoInfo != null) {
-            viewHolder.getTitle().setText(videoInfo.getName());
-            viewHolder.getSubtitle().setText(videoInfo.getTitle());
-            viewHolder.getBody().setText(videoInfo.getPath());
+            viewHolder.getTitle().setText(videoInfo.getTitle());
+            viewHolder.getSubtitle().setText(videoInfo.getTime());
+            viewHolder.getBody().setText(videoInfo.getTitle());
         }
     }
 }

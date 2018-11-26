@@ -111,7 +111,7 @@ public class CardPresenter extends Presenter {
         Log.d(TAG, "onBindViewHolder");
         if (videoInfo.getName() != null) {
             cardView.setTitleText(videoInfo.getTitle());
-            cardView.setContentText(videoInfo.getPath());
+            cardView.setContentText(videoInfo.getTime());
             cardView.setVideoViewSize(CARD_WIDTH, CARD_HEIGHT);
             cardView.setVideoUrl(videoInfo.getPath());
 
