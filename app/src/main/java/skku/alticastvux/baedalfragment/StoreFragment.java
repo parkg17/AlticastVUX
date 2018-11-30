@@ -65,7 +65,7 @@ public class StoreFragment extends BaseBaedalFragment {
             @Override
             public void run() {
                 try {
-                    Document doc = Jsoup.connect("https://m.store.naver.com/restaurants/"+storeID+"/tabs/menus/list").get();
+                    Document doc = Jsoup.connect("https://m.store.naver.com/restaurants/"+storeID+"/tabs/menus/default/list").get();
                     final Elements metadesc = doc.select("meta[property=og:description]");
                     final Elements metaimage = doc.select("meta[property=og:image]");
 
@@ -76,8 +76,8 @@ public class StoreFragment extends BaseBaedalFragment {
                         }
                     });
 
-                    Elements ul = doc.select("div.list_area > ul");
-                    Elements li = ul.select("a");
+                    Elements ul = doc.select("div.list_area > ul > div");
+                    Elements li = ul;
                     final ArrayList<StoreMenu> storeMenuList = new ArrayList<>();
                     for (int i = 0; i < li.size(); i++) {
                         StoreMenu m = new StoreMenu();
@@ -94,6 +94,7 @@ public class StoreFragment extends BaseBaedalFragment {
                         }
                     });
                 } catch (Exception e) {
+                    Log.e("test", e.getMessage());
                     e.printStackTrace();
                 }
             }
