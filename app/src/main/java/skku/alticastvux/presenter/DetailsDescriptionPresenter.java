@@ -27,7 +27,7 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
         if (videoInfo != null) {
             viewHolder.getTitle().setText(videoInfo.getTitle());
             viewHolder.getSubtitle().setText(videoInfo.getTime());
-            viewHolder.getBody().setText(videoInfo.getTitle());
+            viewHolder.getBody().setText("추가된 날짜: "+ videoInfo.getAddedDate()+"\n\n"+"상세설명");
         }
     }
 }

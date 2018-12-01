@@ -61,7 +61,9 @@ public class VideoInfo implements Serializable {
     }
 
     public String getAddedDate() {
-        return addedDate;
+        long date = Long.valueOf(addedDate)*1000L;
+        String normalDate = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date(date));
+        return normalDate;
     }
 
     public void setAddedDate(String addedDate) {
