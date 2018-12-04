@@ -61,7 +61,9 @@ public class VideoInfo implements Serializable {
     }
 
     public String getAddedDate() {
-        return addedDate;
+        long date = Long.valueOf(addedDate)*1000L;
+        String normalDate = new java.text.SimpleDateFormat("yyyy/MM/dd").format(new java.util.Date(date));
+        return normalDate;
     }
 
     public void setAddedDate(String addedDate) {
@@ -98,5 +100,36 @@ public class VideoInfo implements Serializable {
 
     public void setGenre(int genre) {
         this.genre = genre;
+    }
+
+    public String getTime(){
+        int hour,min,sec;
+        int dur = ((int)(this.duration))/1000;
+        String len="";
+
+        hour = dur/3600;
+        dur %= 3600;
+        min = dur/60;
+        sec = dur%60;
+        if(hour != 0) {
+            len += hour + ":";
+            if((min/10) == 0)
+                len += "0" + min + ":";
+            else
+                len += min + ":";
+            if((sec/10) == 0)
+                len += "0" + sec;
+            else
+                len += sec;
+        }else if(min != 0){
+            len += min + ":";
+            if((sec/10) == 0)
+                len += "0" + sec;
+            else
+                len += sec;
+        }else
+            len += sec;
+
+        return len;
     }
 }

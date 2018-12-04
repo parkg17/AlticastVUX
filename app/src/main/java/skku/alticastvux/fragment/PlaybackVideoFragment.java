@@ -75,7 +75,7 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
             }
         });
         mMediaPlayerGlue.setTitle(videoInfo.getTitle());
-        mMediaPlayerGlue.setSubtitle(videoInfo.getPath());
+        mMediaPlayerGlue.setSubtitle(videoInfo.getAddedDate());
         mMediaPlayerGlue.getPlayerAdapter().setDataSource(Uri.parse(videoInfo.getPath()));
         PlaybackSeekDiskDataProvider.setDemoSeekProvider(mMediaPlayerGlue, videoInfo.getPath());
 
