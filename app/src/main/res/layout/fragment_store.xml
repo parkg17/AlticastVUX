@@ -57,8 +57,10 @@
             android:verticalSpacing="5dp">
 
         </skku.alticastvux.util.ExpandableGridView>
-        
-        <TextView
+
+
+        <Button
+            android:id="@+id/orderButton"
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
             android:layout_height="45dp"

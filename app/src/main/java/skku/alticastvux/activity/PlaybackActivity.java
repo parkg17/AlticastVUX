@@ -164,6 +164,12 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
 
     ArrayList<StoreMenu> checkoutList = new ArrayList<>();
 
+    public ArrayList getCheckoutList()
+    {
+        return checkoutList;
+    }
+
+
     public void addItemToCheckoutList(StoreMenu s) {
         checkoutList.add(s);
         recycler_checkout.setAdapter(new RecyclerView.Adapter() {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ import skku.alticastvux.adapter.GridStoreMenuAdapter;
 import skku.alticastvux.data.Store;
 import skku.alticastvux.data.StoreMenu;
 import skku.alticastvux.util.ExpandableGridView;
+import skku.alticastvux.util.FragmentStackV4;
 
 public class StoreFragment extends BaseBaedalFragment {
 
@@ -44,6 +46,9 @@ public class StoreFragment extends BaseBaedalFragment {
 
     @BindView(R.id.tv_storename)
     TextView tv_storename;
+
+    @BindView(R.id.orderButton)
+    Button orderButton;
 
     View layout;
 
@@ -65,7 +70,7 @@ public class StoreFragment extends BaseBaedalFragment {
             @Override
             public void run() {
                 try {
-                    Document doc = Jsoup.connect("https://m.store.naver.com/restaurants/"+storeID+"/tabs/menus/list").get();
+                    Document doc = Jsoup.connect("https://m.store.naver.com/restaurants/"+storeID+"/tabs/menus/default/list").get();
                     final Elements metadesc = doc.select("meta[property=og:description]");
                     final Elements metaimage = doc.select("meta[property=og:image]");
 
@@ -76,8 +81,8 @@ public class StoreFragment extends BaseBaedalFragment {
                         }
                     });
 
-                    Elements ul = doc.select("div.list_area > ul");
-                    Elements li = ul.select("a");
+                    Elements ul = doc.select("div.list_area > ul > div");
+                    Elements li = ul;
                     final ArrayList<StoreMenu> storeMenuList = new ArrayList<>();
                     for (int i = 0; i < li.size(); i++) {
                         StoreMenu m = new StoreMenu();
@@ -94,6 +99,7 @@ public class StoreFragment extends BaseBaedalFragment {
                         }
                     });
                 } catch (Exception e) {
+                    Log.e("test", e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -116,6 +122,18 @@ public class StoreFragment extends BaseBaedalFragment {
                 ((PlaybackActivity)getActivity()).addItemToCheckoutList(storeMenuList.get(i));
             }
         });
+
+        orderButton.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                OrderFragment fragment = new OrderFragment();
+                Bundle args = new Bundle();
+                args.putString("storeName",  getArguments().getString("storeName"));
+                fragment.setArguments(args);
+                FragmentStackV4.add(getFragmentManager(), R.id.layout_order, fragment);
+            }
+        });
+
         imageview_store.setFocusableInTouchMode(true);
         imageview_store.setFocusable(true);
         imageview_store.requestFocus();

@@ -53,7 +53,7 @@ public class GridStoreMenuAdapter extends BaseAdapter {
         tv_desc.setText(getItem(i).description);
         ImageView iv = (ImageView) view.findViewById(R.id.grid_item_iv);
         tv.setText(getItem(i).name);
-        if (getItem(i).thumUrl != null)
+        if (getItem(i).thumUrl != null && getItem(i).thumUrl.trim().length() > 0)
             Picasso.get().load(getItem(i).thumUrl).into(iv);
         return view;
     }
