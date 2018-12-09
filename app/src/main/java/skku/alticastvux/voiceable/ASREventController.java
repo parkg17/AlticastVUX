@@ -45,7 +45,7 @@ public class ASREventController implements ClientAPI.Callback<ClientAPI.ASRResul
         String response = asrResult.getSpokenResponse();
         Log.e(getClass().getSimpleName(), response);
         String pattern = asrResult.getMatchedPattern();
-        ArrayList<ClientAPI.Entity> entities = asrResult.getMatchedEntities();
+        //ArrayList<ClientAPI.Entity> entities = asrResult.getMatchedEntities();
 
         if (listener != null) {
             VoiceablePattern vp = null;

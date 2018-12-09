@@ -22,10 +22,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.regex.Pattern;
 
 import skku.alticastvux.R;
 import skku.alticastvux.activity.base.BaseActivity;
@@ -41,7 +47,7 @@ import skku.alticastvux.voiceable.pattern.VoiceablePattern;
  */
 public class MainActivity extends BaseActivity {
 
-    private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
+    private final String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.INTERNET};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,16 +69,53 @@ public class MainActivity extends BaseActivity {
 
     private void init() {
         ArrayList<VideoInfo> videos = Util.getAllVideos();
+        for(VideoInfo v: videos) {
+            try {
+                Log.e("test", "check file: " + "/sdcard/txt/" + v.getName().split(Pattern.quote("."))[0] + ".txt");
+                File f = new File("/sdcard/txt/" + v.getName().split(Pattern.quote("."))[0] + ".txt");
+                if (f.exists()) {
+                    v.setDescription(getStringFromFile(f.getPath()));
+                } else {
+                    v.setDescription("설명 없음");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         ASREventController.getInstance().createASRContext(getApplicationContext());
         DBUtil.getInstance().addVideos(0, videos);
         setContentView(R.layout.activity_main);
     }
 
+    private String getStringFromFile (String filePath) throws Exception {
+        File fl = new File(filePath);
+        FileInputStream fin = new FileInputStream(fl);
+        String ret = convertStreamToString(fin);
+        fin.close();
+        return ret;
+    }
+
+    private String convertStreamToString(InputStream is) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
+    }
+
+
     private void checkPermissions() {
-        boolean notgranted = true;
+        boolean notgranted = false;
         for (String permission : permissions) {
-            notgranted = notgranted && ContextCompat.checkSelfPermission(getApplicationContext(),
-                    permission) != PackageManager.PERMISSION_GRANTED;
+            Log.e("check permission", ContextCompat.checkSelfPermission(getApplicationContext(),
+                    permission)+"");
+            if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                    permission) != PackageManager.PERMISSION_GRANTED) {
+                notgranted = true;
+            }
         }
 
         if (notgranted) {

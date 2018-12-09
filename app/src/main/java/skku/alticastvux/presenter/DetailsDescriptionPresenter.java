@@ -15,6 +15,9 @@
 package skku.alticastvux.presenter;
 
 import android.support.v17.leanback.widget.AbstractDetailsDescriptionPresenter;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import skku.alticastvux.model.VideoInfo;
 
@@ -23,11 +26,14 @@ public class DetailsDescriptionPresenter extends AbstractDetailsDescriptionPrese
     @Override
     protected void onBindDescription(ViewHolder viewHolder, Object item) {
         VideoInfo videoInfo = (VideoInfo) item;
-
         if (videoInfo != null) {
             viewHolder.getTitle().setText(videoInfo.getTitle());
             viewHolder.getSubtitle().setText(videoInfo.getTime());
-            viewHolder.getBody().setText("추가된 날짜: "+ videoInfo.getAddedDate()+"\n\n"+"상세설명");
+            ViewGroup v = (ViewGroup) viewHolder.getBody().getParent();
+            viewHolder.getBody().setMaxLines(20);
+            viewHolder.getBody().setTextSize(20);
+            viewHolder.getBody().setEllipsize(null);
+            viewHolder.getBody().setText(videoInfo.getDescription());
         }
     }
 }
