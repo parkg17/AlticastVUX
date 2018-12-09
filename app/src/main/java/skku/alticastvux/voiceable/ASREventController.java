@@ -41,6 +41,7 @@ public class ASREventController implements ClientAPI.Callback<ClientAPI.ASRResul
 
     @Override
     public void callback(ClientAPI.ASRResult asrResult) {
+        Log.e("Test", "callback");
         String response = asrResult.getSpokenResponse();
         Log.e(getClass().getSimpleName(), response);
         String pattern = asrResult.getMatchedPattern();

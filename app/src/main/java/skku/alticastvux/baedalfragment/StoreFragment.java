@@ -118,7 +118,6 @@ public class StoreFragment extends BaseBaedalFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // add item to checkout list
-                Toast.makeText(getActivity(), "add item", 0).show();;
                 ((PlaybackActivity)getActivity()).addItemToCheckoutList(storeMenuList.get(i));
             }
         });

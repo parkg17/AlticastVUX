@@ -73,19 +73,21 @@ public class OrderFragment extends BaseBaedalFragment{
         ArrayList<StoreMenu> checkoutList = ((PlaybackActivity) getActivity()).getCheckoutList(); //args로 전달하는거 알아보기
         OrderListviewAdapter adapter = new OrderListviewAdapter();
         ListView listview = (ListView) layout.findViewById(R.id.selected_lv);
-        listview.setAdapter(adapter);
+
         for(int i=0; i<checkoutList.size(); i++)
         {
             adapter.addItem(checkoutList.get(i));
-            //total_price+=Integer.parseInt(checkoutList.get(i).price);
+            total_price+=Integer.parseInt(checkoutList.get(i).price.replaceAll("\\D+",""));
         }
+        adapter.notifyDataSetChanged();
+        listview.setAdapter(adapter);
 
         //selected_lv
         payment.setText("결제 수단");
         payment_detail.setText("신용 카드");
         deliver_place.setText("배달 장소");
         price.setText("결제 금액");
-        //price_detail.setText(total_price);
+        price_detail.setText(total_price+"");
         btn_click= (Button) layout.findViewById(R.id.pay_button);
         btn_click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +98,11 @@ public class OrderFragment extends BaseBaedalFragment{
                 popupWindow.showAtLocation(popupView, Gravity.CENTER,0,-100);
             }
         });
+
+        btn_click.setFocusableInTouchMode(true);
+        btn_click.setFocusable(true);
+        btn_click.requestFocus();
+
         return layout;
     }
 

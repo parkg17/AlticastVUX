@@ -20,7 +20,7 @@ allprojects {
         google()
         jcenter()
         maven{
-            url 'https://dl.bintray.com/alticastaitf/voiceable/'
+            url 'http://maven.alti.ai:8081/artifactory/voiceable'
         }
     }
 }

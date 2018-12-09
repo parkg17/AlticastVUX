@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import skku.alticastvux.R;
+import skku.alticastvux.activity.PlaybackActivity;
 import skku.alticastvux.adapter.GridMenuAdapter;
 import skku.alticastvux.model.Menu;
 import skku.alticastvux.util.FragmentStackV4;
@@ -97,5 +98,6 @@ public class MenuSearchFragment extends BaseBaedalFragment {
         grid_menu.setFocusableInTouchMode(true);
         grid_menu.setFocusable(true);
         grid_menu.requestFocus();
+        ((PlaybackActivity) getActivity()).clearCheckoutList();
     }
 }

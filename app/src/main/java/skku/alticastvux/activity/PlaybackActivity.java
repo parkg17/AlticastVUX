@@ -73,6 +73,7 @@ import skku.alticastvux.baedalfragment.MenuSearchFragment;
 import skku.alticastvux.data.StoreMenu;
 import skku.alticastvux.ffmpeg.FFmpegWrapper;
 import skku.alticastvux.fragment.PlaybackVideoFragment;
+import skku.alticastvux.gracenote.GracenoteClient;
 import skku.alticastvux.model.Menu;
 import skku.alticastvux.util.AudioFromVideo;
 import skku.alticastvux.util.DBUtil;
@@ -196,6 +197,31 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
 
     }
 
+    public void clearCheckoutList() {
+        checkoutList.clear();
+        recycler_checkout.setAdapter(new RecyclerView.Adapter() {
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_card_2, parent, false);
+                RecyclerView.ViewHolder holder = new ViewHolder(v);
+                return holder;
+            }
+
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
+                ViewHolder holder = (ViewHolder) h;
+                StoreMenu s = checkoutList.get(position);
+                Picasso.get().load(s.thumUrl).into(((ViewHolder) h).imageView);
+                ((ViewHolder) h).textView.setText(s.name);
+            }
+
+            @Override
+            public int getItemCount() {
+                return checkoutList.size();
+            }
+        });
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textView;
@@ -268,6 +294,7 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
     public void onBackPressed() {
         if (minimized) {
             if (FragmentStackV4.count == 0) {
+                clearCheckoutList();
                 maximizeFragment();
             }
             if (FragmentStackV4.count > 0) {
@@ -278,7 +305,7 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
         }
     }
 
-    /*
+
     GracenoteClient client;
 
     public void findSong(String filename, long position) {
@@ -361,7 +388,6 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
 
     GnAlbum pAlbum = null;
 
-    Handler handler = new Handler();
 
     private void showShowInfo(GnAlbum album) {
         if (album == null || (pAlbum != null && album.trackMatched().title().display().equals(pAlbum.trackMatched().title().display())))
@@ -455,5 +481,5 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
             }
         });
     }
-    */
+
 }

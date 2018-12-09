@@ -20,7 +20,7 @@ public class MainGrammar {
     private MultiValuedMap<String, String> exampleTextMap = new ArrayListValuedHashMap<String, String>();
 
     public MainGrammar() {
-        registerPattern("${*query}", new String[]{GLOBAL_SCENE});
+        registerPattern("${*}", new String[]{GLOBAL_SCENE});
         // ${time} 동작안함
         /*
         for (int i = 0; i < Patterns.length; i++) {

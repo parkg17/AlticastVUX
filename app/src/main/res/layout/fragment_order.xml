@@ -38,9 +38,9 @@
         <ListView
             android:id="@+id/selected_lv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="500dp"
-            android:orientation="vertical" />
+            android:divider="@null"
+            android:layout_marginLeft="10dp"
+            android:layout_height="180dp" />
 
         <TextView
             android:id="@+id/payment"
@@ -62,16 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:textSize="23sp" />
-
-        /*
-        Spinner
-        android:id="@+id/place_spinner"
-        android:entries="@array/order_place"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:textSize="27dp"
-        */
 
         <TextView
             android:id="@+id/price"

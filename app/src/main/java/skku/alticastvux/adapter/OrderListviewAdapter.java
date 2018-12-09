@@ -1,6 +1,7 @@
 package skku.alticastvux.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 import skku.alticastvux.R;
+import skku.alticastvux.app.SKKUVuxApp;
 import skku.alticastvux.data.StoreMenu;
 import skku.alticastvux.model.Order_ListviewItem;
 
@@ -44,8 +46,8 @@ public class OrderListviewAdapter extends BaseAdapter {
         final Context context = parent.getContext();
 
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.order_item, parent, false);
+            LayoutInflater inflater = (LayoutInflater) SKKUVuxApp.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.order_item, null);
         }
 
         TextView name_tv = (TextView) view.findViewById(R.id.menu_name);
@@ -55,7 +57,6 @@ public class OrderListviewAdapter extends BaseAdapter {
 
         name_tv.setText(listviewItem.getName());
         price_tv.setText(listviewItem.getPrice());
-
         return view;
     }
 

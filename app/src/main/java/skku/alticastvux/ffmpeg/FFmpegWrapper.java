@@ -3,30 +3,31 @@ package skku.alticastvux.ffmpeg;
 import android.content.Context;
 import android.util.Log;
 
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
 
 public class FFmpegWrapper {
 
-    /*
     FFmpeg ffmpeg;
     Context context;
     OnCommandFinishListener listener;
-    */
 
     public interface OnCommandFinishListener {
         public abstract void finish(String command);
     }
 
     public FFmpegWrapper(Context context, OnCommandFinishListener listener) {
-        /*
         this.listener = listener;
         this.context = context;
         ffmpeg = FFmpeg.getInstance(context);
         loadFFMpegBinary();
-        */
     }
 
     private void loadFFMpegBinary() {
-        /*
         try {
             ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
                 @Override
@@ -37,11 +38,9 @@ public class FFmpegWrapper {
         } catch (FFmpegNotSupportedException e) {
 
         }
-        */
     }
 
     public void execFFmpegBinary(final String command[]) {
-        /*
         String comm = "";
         for (int i = 0; i < command.length; i++)
             comm += command[i] + " ";
@@ -79,7 +78,6 @@ public class FFmpegWrapper {
         } catch (FFmpegCommandAlreadyRunningException e) {
             // do nothing for now
         }
-        */
     }
 
 }

@@ -31,7 +31,7 @@
                 android:layout_height="30dp"
                 android:gravity="center"
                 android:background="#fff"
-                android:text="ㅈㄴ"
+                android:text=""
                 android:textColor="#000" />
         </LinearLayout>
 
@@ -43,7 +43,7 @@
             android:gravity="center"
             android:background="#fff"
             android:maxLines="5"
-            android:text="ㅈㄴ"
+            android:text=""
             android:textColor="#000" />
 
         <skku.alticastvux.util.ExpandableGridView

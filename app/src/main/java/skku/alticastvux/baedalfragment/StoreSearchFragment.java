@@ -73,10 +73,20 @@ public class StoreSearchFragment extends BaseBaedalFragment {
                     is.close();
                     System.out.println(resString);
                     final SearchMoreResult sresult = new Gson().fromJson(resString, SearchMoreResult.class);
+                    final ArrayList<Store> list = sresult.getList();
+                    int size = list.size();
+                    for(int i = 0; i < size; i++) {
+                        Store s = list.get(i);
+                        if(s.thumUrl == null || s.thumUrl.trim().length() == 0) {
+                            list.remove(i);
+                            i--;
+                            size--;
+                        }
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setData(sresult.getList());
+                            setData(list);
                         }
                     });
                 } catch (Exception e) {
