@@ -31,8 +31,11 @@ import skku.alticastvux.data.SearchMoreResult;
 import skku.alticastvux.data.Store;
 import skku.alticastvux.util.FragmentStackV4;
 import skku.alticastvux.util.Util;
+import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.FindStorePattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
-public class StoreSearchFragment extends BaseBaedalFragment {
+public class StoreSearchFragment extends BaseBaedalFragment implements CommandListener {
 
     @BindView(R.id.gridview_menu)
     GridView grid_menu;
@@ -123,5 +126,28 @@ public class StoreSearchFragment extends BaseBaedalFragment {
         grid_menu.setFocusableInTouchMode(true);
         grid_menu.setFocusable(true);
         grid_menu.requestFocus();
+    }
+
+    @Override
+    public boolean receiveCommand(VoiceablePattern pattern) {
+        if (pattern instanceof FindStorePattern) {
+            /*
+            String storename = ((FindStorePattern) pattern).getStore();
+            int index = 0;
+            for (Store store : storeList) {
+                if (storeList.get(index).name.equals(storename)) {
+                    StoreFragment fragment = new StoreFragment();
+                    Bundle args = new Bundle();
+                    args.putString("storeName", store.name);
+                    args.putString("storeID", store.id.substring(1));
+                    fragment.setArguments(args);
+                    FragmentStackV4.add(getFragmentManager(), R.id.layout_order, fragment);
+                    return true;
+                }
+                index++;
+            }
+            */
+        }
+        return false;
     }
 }

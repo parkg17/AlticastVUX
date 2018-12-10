@@ -18,8 +18,11 @@ import skku.alticastvux.activity.PlaybackActivity;
 import skku.alticastvux.adapter.GridMenuAdapter;
 import skku.alticastvux.model.Menu;
 import skku.alticastvux.util.FragmentStackV4;
+import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.FindMenuPattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
-public class MenuSearchFragment extends BaseBaedalFragment {
+public class MenuSearchFragment extends BaseBaedalFragment implements CommandListener {
 
     @BindView(R.id.gridview_menu)
     GridView grid_menu;
@@ -99,5 +102,19 @@ public class MenuSearchFragment extends BaseBaedalFragment {
         grid_menu.setFocusable(true);
         grid_menu.requestFocus();
         ((PlaybackActivity) getActivity()).clearCheckoutList();
+    }
+
+    @Override
+    public boolean receiveCommand(VoiceablePattern pattern) {
+        if (pattern instanceof FindMenuPattern) {
+            String keyword = ((FindMenuPattern) pattern).getMenu();
+
+            StoreSearchFragment fragment = new StoreSearchFragment();
+            Bundle args = new Bundle();
+            args.putString("keyword", keyword);
+            fragment.setArguments(args);
+            FragmentStackV4.add(getFragmentManager(), R.id.layout_order, fragment);
+        }
+        return false;
     }
 }

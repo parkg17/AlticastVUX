@@ -12,7 +12,11 @@ import skku.alticastvux.activity.MainActivity;
 import skku.alticastvux.voiceable.pattern.AddBookMarkPattern;
 import skku.alticastvux.voiceable.pattern.AddGenrePattern;
 import skku.alticastvux.voiceable.pattern.ChangeGenrePattern;
+import skku.alticastvux.voiceable.pattern.DeliveryPattern;
+import skku.alticastvux.voiceable.pattern.FindFoodPattern;
+import skku.alticastvux.voiceable.pattern.FindMenuPattern;
 import skku.alticastvux.voiceable.pattern.FindSongPattern;
+import skku.alticastvux.voiceable.pattern.FindStorePattern;
 import skku.alticastvux.voiceable.pattern.MovePattern;
 import skku.alticastvux.voiceable.pattern.RefreshPattern;
 import skku.alticastvux.voiceable.pattern.SelectPattern;
@@ -67,6 +71,17 @@ public class ASREventController implements ClientAPI.Callback<ClientAPI.ASRResul
                 vp.parse(response);
             } else if(ShowDetailPattern.matches(response)) {
                 vp = new ShowDetailPattern();
+                vp.parse(response);
+            } else if(DeliveryPattern.matches(response)) {
+                vp = new DeliveryPattern();
+            } else if(FindMenuPattern.matches(response)) {
+                vp = new FindMenuPattern();
+                vp.parse(response);
+            } else if(FindStorePattern.matches(response)) {
+                vp = new FindMenuPattern();
+                vp.parse(response);
+            } else if(FindFoodPattern.matches(response)) {
+                vp = new FindMenuPattern();
                 vp.parse(response);
             }
             if (vp != null)

@@ -260,7 +260,7 @@ public class PlaybackActivity extends BaseFragmentActivity implements CommandLis
         FragmentStackV4.clear(getSupportFragmentManager());
     }
 
-    private void minimizeFragment() {
+    public void minimizeFragment() {
         minimized = true;
         ObjectAnimator anim = ObjectAnimator.ofFloat(fragment_container, "scaleX", 0.65f);
         anim.setDuration(1000);

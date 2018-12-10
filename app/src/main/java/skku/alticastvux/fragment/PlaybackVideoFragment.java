@@ -39,6 +39,7 @@ import skku.alticastvux.model.VideoInfo;
 import skku.alticastvux.util.DBUtil;
 import skku.alticastvux.voiceable.CommandListener;
 import skku.alticastvux.voiceable.pattern.AddBookMarkPattern;
+import skku.alticastvux.voiceable.pattern.DeliveryPattern;
 import skku.alticastvux.voiceable.pattern.FindSongPattern;
 import skku.alticastvux.voiceable.pattern.MovePattern;
 import skku.alticastvux.voiceable.pattern.VoiceablePattern;
@@ -114,6 +115,9 @@ public class PlaybackVideoFragment extends VideoSupportFragment implements Comma
             b.setId(videoInfo.getId());
             b.setTime(mMediaPlayerGlue.getCurrentPosition()); //ms
             DBUtil.getInstance().addBookMark((int) videoInfo.getId(), b);
+        } else if (pattern instanceof DeliveryPattern) {
+            /** 동영상을 재생하면 배달화면을 띄우는 대신 이 부분에 음성명령어를 추가하여서  */
+            ((PlaybackActivity) getActivity()).minimizeFragment();
         }
         return false;
     }

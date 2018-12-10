@@ -32,8 +32,11 @@ import skku.alticastvux.data.Store;
 import skku.alticastvux.data.StoreMenu;
 import skku.alticastvux.util.ExpandableGridView;
 import skku.alticastvux.util.FragmentStackV4;
+import skku.alticastvux.voiceable.CommandListener;
+import skku.alticastvux.voiceable.pattern.FindFoodPattern;
+import skku.alticastvux.voiceable.pattern.VoiceablePattern;
 
-public class StoreFragment extends BaseBaedalFragment {
+public class StoreFragment extends BaseBaedalFragment implements CommandListener {
 
     @BindView(R.id.gridview_menu)
     ExpandableGridView grid_menu;
@@ -144,4 +147,23 @@ public class StoreFragment extends BaseBaedalFragment {
         imageview_store.setFocusable(true);
         imageview_store.requestFocus();
     }
+
+    @Override
+    public boolean receiveCommand(VoiceablePattern pattern) {
+        if (pattern instanceof FindFoodPattern) {
+            /*
+            String foodname = ((FindFoodPattern) pattern).getFood();
+            int index = 0;
+            for (Store store : storeMenuList) {
+                if (storeMenuList.get(index).name.equals(foodname)) {
+                    ((PlaybackActivity) getActivity()).addItemToCheckoutList(storeMenuList.get(index));
+                    return true;
+                }
+                index++;
+            }
+            */
+        }
+        return false;
+    }
+
 }
